@@ -79,10 +79,11 @@ def naver_crawler(area):
                 shop_type = null
             print(f'가게 종류: {shop_type}')
 
-            crawler.implicitly_wait(1)
+            crawler.implicitly_wait(2)
 
             # 가게명 클릭하여 세부창 띄우기
-            shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').click()
+            # shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').click()
+            shop.find_element(By.CLASS_NAME, 'N_KDL').click()
 
             crawler.implicitly_wait(1)
             
