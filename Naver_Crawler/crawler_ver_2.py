@@ -89,6 +89,8 @@ def naver_crawler(area):
             
             # frame 밖으로 나가기
             crawler.switch_to.default_content()
+            
+            crawler.implicitly_wait(1)
 
             # entryIframe 찾아 들어오기
             entryIframe = crawler.find_element(By.ID, 'entryIframe')
@@ -118,7 +120,7 @@ def naver_crawler(area):
             # 가게 영업시간
             try:
                 crawler.find_element(By.CLASS_NAME, 'gKP9i.RMgN0').click()
-                time.sleep(0.5)
+                crawler.implicitly_wait(1)
                 # 가게 요일별 영업시간
                 time_info = crawler.find_elements(By.CLASS_NAME,'w9QyJ')
                 time_info = [element.text for element in time_info]
