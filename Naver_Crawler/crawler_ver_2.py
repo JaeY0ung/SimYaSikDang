@@ -37,6 +37,7 @@ def naver_crawler(area):
 
     # 크롤링한 상점들의 정보를 담는 리스트
     crawl_data = []
+    
     for page in range(1,6): # 페이지 클릭수
         # default
         crawler.switch_to.default_content()
@@ -59,7 +60,7 @@ def naver_crawler(area):
 
         # 가게들 정보 크롤링 시작
         for shop in shops:
-            
+
             # frame 밖으로 나가기
             crawler.switch_to.default_content()
 
