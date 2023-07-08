@@ -16,68 +16,64 @@ import datetime
 import re
 import requests
 
-area_and_types = ["신촌 술집", "강남 술집", "일산 술집"]
+areas = ["홍대", "신촌", "강남", "일산", "연남동"]
+type = "술집"
 
-def naver_crawler(area_and_type):
-    search_area = area_and_type.split()[0]
-    search_type = area_and_type.split()[1]
-    chrome_options = Options() #브라우저 꺼짐 방지
+def naver_crawler(area, type):
+    # chrome_crawler 설정
+    chrome_options = Options() # 브라우저 꺼짐 방지
     chrome_options.add_experimental_option("detach", True)
     chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"]) #불필요한 에러 메세지 삭제
-
     service = Service(executable_path = ChromeDriverManager().install()) # 크롬 드라이버 최신 버전 자동 설치 후 서비스 만들기
     crawler = webdriver.Chrome(service = service, options = chrome_options)
-    main_url = f'https://map.naver.com/v5/search/{search_area}%20{search_type}/place'
+    main_url = f'https://map.naver.com/v5/search/{area}%20{type}/place'
 
-    crawler.get(main_url) #웹페이지 해당 주소 이동
+    # 크롤링할 url로 이동
+    crawler.get(main_url) # 웹페이지 해당 주소 이동
+    crawler.implicitly_wait(3) # 로딩이 끝날동안 기다리기
 
-    crawler.implicitly_wait(3)
+    # 프레임 이동
     searchIframe = crawler.find_element(By.ID, 'searchIframe')
     crawler.switch_to.frame(searchIframe)
+    crawler.implicitly_wait(2) # 로딩이 끝날동안 기다리기
 
-    crawler.implicitly_wait(3) #로딩이 끝날동안 기다리기
-
-    with open(f'{search_area}{search_type}_shopdata.csv', 'w',encoding= 'UTF-8') as f:
+    with open(f'{area}{type}_shopdata.csv', 'w', encoding= 'UTF-8') as f:
         csvWriter = csv.writer(f)
-        
-        # TODO: 
-        # 브라우저 끝까지 내리기
-        for _ in range(30):
+        crawler.find_element(By.CLASS_NAME, "CHC5F").click()
+        time.sleep(3)
+        # 페이지의 맨 밑까지 스크롤 (50 ~ 55개 상점 정보) 
+        for _ in range(12):
             body = crawler.find_element(By.CSS_SELECTOR, 'body')
             body.send_keys(Keys.PAGE_DOWN)
             body.send_keys(Keys.PAGE_DOWN)
             body.send_keys(Keys.PAGE_DOWN)
+            h = crawler.execute_script("return document.body.scrollHeight")
+            print(f"현재 브라우저 높이: {h}")
             time.sleep(1)
-        # while True:
-        #     before_h = crawler.execute_script("return document.body.scrollHeight") # 브라우저 상의 처음 높이
-        #     print(f"before_h={before_h}") 
-        #     time.sleep(10) # 화면 켜질 때 시간이 좀 걸리기 때문에
-        #     crawler.execute_script("window.scrollTo(0, document.body.scrollHeight)") # 스크롤 내리기
-        #     time.sleep(10) # 검색결과 뜰 때까지 기다리기 위해
-        #     after_h = crawler.execute_script("return document.body.scrollHeight")
-        #     if after_h == before_h:
-        #         break
-        #     before_h = after_h
 
-
+        # shop들의 목록이 들어있는 className 찾기
         shops = crawler.find_elements(By.CLASS_NAME, 'UEzoS.rTjJo')
         for shop in shops:
             # frame 밖으로 나가기
             crawler.switch_to.default_content()
+
             # searchIframe 찾아 들어오기
             searchIframe = crawler.find_element(By.ID, 'searchIframe')
             crawler.switch_to.frame(searchIframe)
 
             # 가게명 가져오기
             shop_name = shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').text
+
             # 가게 카테고리 가져오기
             shop_type = shop.find_element(By.CLASS_NAME, 'KCMnt').text
+
             # 가게명 클릭하여 세부창 띄우기
             shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').click()
-            
             crawler.implicitly_wait(1)
+            
             # frame 밖으로 나가기
             crawler.switch_to.default_content()
+
             # entryIframe 찾아 들어오기
             entryIframe = crawler.find_element(By.ID, 'entryIframe')
             crawler.switch_to.frame(entryIframe)
@@ -90,13 +86,17 @@ def naver_crawler(area_and_type):
 
             shop_time_crawling = crawler.find_elements(By.CLASS_NAME,'gKP9i.RMgN0')
             shop_time_info = [element.text for element in shop_time_crawling]
+
             print(f"shop_time_info={shop_time_info}")
             open_time_info = []
+            print(f"open_time_info={open_time_info}")
             for day in shop_time_info:
                 tmp = day.replace("\n", "=").replace("=접기", "").split('=')
                 open_time_info.append(tmp)
             
-            csvWriter.writerow([shop_name, shop_type, open_time_info])
+            csvWriter.writerow([shop_name, shop_type.strip('"'), open_time_info])
+            print(shop_name, shop_type, open_time_info)
 
-for area_and_type in area_and_types:
-     naver_crawler(area_and_type)
+# 지역별 크롤링 시작
+for area in areas:
+     naver_crawler(area, type)
