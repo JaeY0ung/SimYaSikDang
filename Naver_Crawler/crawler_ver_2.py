@@ -1,5 +1,6 @@
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -8,10 +9,9 @@ import time
 import csv
 
 
-areas = ["홍대", "신촌", "강남", "일산"]
-null = "정보 없음"
-
 def naver_crawler(area):
+    null = "정보 없음"
+
     # chrome_crawler 설정
     chrome_options = Options() # 브라우저 꺼짐 방지
     chrome_options.add_experimental_option("detach", True)
@@ -32,18 +32,18 @@ def naver_crawler(area):
     crawler.find_element(By.CLASS_NAME, "CHC5F").click()
     time.sleep(3)
 
-    # # 페이지의 맨 밑까지 스크롤 (50 ~ 55개 상점 정보) 
-    # for _ in range(6):
-    #     body = crawler.find_element(By.CSS_SELECTOR, 'body')
-    #     body.send_keys(Keys.PAGE_DOWN)
-    #     body.send_keys(Keys.PAGE_DOWN)
-    #     body.send_keys(Keys.PAGE_DOWN)
-    #     body.send_keys(Keys.PAGE_DOWN)
-    #     body.send_keys(Keys.PAGE_DOWN)
-    #     body.send_keys(Keys.PAGE_DOWN)
-    #     h = crawler.execute_script("return document.body.scrollHeight")
-    #     # print(f"현재 브라우저 높이: {h}") -> 같게 나옴
-    #     time.sleep(1)
+    # 페이지의 맨 밑까지 스크롤 (50 ~ 55개 상점 정보) 
+    for _ in range(6):
+        body = crawler.find_element(By.CSS_SELECTOR, 'body')
+        body.send_keys(Keys.PAGE_DOWN)
+        body.send_keys(Keys.PAGE_DOWN)
+        body.send_keys(Keys.PAGE_DOWN)
+        body.send_keys(Keys.PAGE_DOWN)
+        body.send_keys(Keys.PAGE_DOWN)
+        body.send_keys(Keys.PAGE_DOWN)
+        h = crawler.execute_script("return document.body.scrollHeight")
+        # print(f"현재 브라우저 높이: {h}") -> 같게 나옴
+        time.sleep(1)
 
     # shop들의 목록이 들어있는 className 찾기
     shops = crawler.find_elements(By.CLASS_NAME, 'UEzoS.rTjJo')
@@ -107,7 +107,7 @@ def naver_crawler(area):
         for day_info in time_info:
             day_info = day_info.replace("\n", "=").replace("=접기", "").split('=')
             shop_time_info.append(day_info)
-        print(f"영업시간 정보={shop_time_info}")
+        print(f"영업시간 정보: {shop_time_info}")
 
         # 가게 연락처
         try:
@@ -124,7 +124,3 @@ def naver_crawler(area):
         csvWriter.writerow(['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_time_info', 'shop_contact'])
         for row in crawl_data:
             csvWriter.writerow(row)
-
-# 지역별 크롤링 시작
-for area in areas:
-     naver_crawler(area)

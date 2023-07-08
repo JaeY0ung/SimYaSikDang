@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 
 def csv_to_excel(area):
     csvfile = f"./csv/{area}술집.csv"
@@ -11,8 +10,3 @@ def csv_to_excel(area):
 
     #xlsx 파일로 저장
     save_xlsx.save()
-
-csv_to_excel("홍대")
-csv_to_excel("일산")
-csv_to_excel("강남")
-csv_to_excel("신촌")
