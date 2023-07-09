@@ -141,13 +141,14 @@ def naver_crawler(area):
                 shop_contact = null
             print(f'연락처: {shop_contact}')
 
-            row = [shop_name, shop_type, shop_star_rating, shop_address, shop_time_info, shop_contact]
-            crawl_data.append(row)
+            values = ['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_time_info', 'shop_contact']
+            keys = [shop_name, shop_type, shop_star_rating, shop_address, shop_time_info, shop_contact]
+            crawl_data.append(dict(zip(values, keys)))
     
     crawler.quit()
 
     with open(f'./csv/{area}술집.csv', 'w', encoding= 'UTF-8') as file:
-        csvWriter = csv.writer(file)
-        csvWriter.writerow(['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_time_info', 'shop_contact'])
+        csvWriter = csv.DictWriter(file, fieldnames=values)
+        csvWriter.writeheader()
         for row in crawl_data:
             csvWriter.writerow(row)

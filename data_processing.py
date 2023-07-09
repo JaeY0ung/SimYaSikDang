@@ -6,18 +6,22 @@ def processed_data_to_csv(area):
 
     # csv 파일 불러와서 영업시간 데이터 전처리
     with open(f'./csv/{area}술집.csv', 'r', encoding= 'UTF-8') as file:
-        csvReader = csv.reader(file)
-        processed_data.append(dict(zip(["월","화","수","목","금","토","일"], ["월","화","수","목","금","토","일"])))
-        next(csvReader) # 헤더 뺴고 읽기
+        csvReader = csv.DictReader(file)
         for line in csvReader:
+            shop_name = line['shop_name']
+            shop_type = line['shop_type']
+            shop_star_rating = line['shop_star_rating']
+            shop_address = line['shop_address']
+            shop_open_info = line['shop_time_info']
+            shop_contact = line['shop_contact']
+
             shop_open_info_by_day = {'월': null,
-                                    '화': null,
-                                    '수': null,
-                                    '목': null,
-                                    '금': null,
-                                    '토': null,
-                                    '일': null}
-            shop_open_info = line[4]
+                                     '화': null,
+                                     '수': null,
+                                     '목': null,
+                                     '금': null,
+                                     '토': null,
+                                     '일': null }
             shop_open_info = shop_open_info.replace("'", "").strip('[[').strip(']]').split('], [')
             
             for day in shop_open_info[1:]:
@@ -59,12 +63,15 @@ def processed_data_to_csv(area):
                 elif '일' in day_of_the_week:
                     shop_open_info_by_day['일'] = day_info
                 
-            processed_data.append(shop_open_info_by_day.values())
+                
+            keys = ['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_open_info', 'shop_contact']
+            values = [shop_name, shop_type, shop_star_rating, shop_address, list(shop_open_info_by_day.items()), shop_contact]
+            processed_data.append(dict(zip(keys, values)))
 
     # csv 파일에 저장
     with open(f'./csv/{area}술집_processed_opentime_data.csv', 'w', encoding= 'UTF-8') as file:
-            csvWriter = csv.writer(file)
-            csvWriter.writerow(processed_data[0])
-            for row in processed_data[1:]:
+            csvWriter = csv.DictWriter(file, fieldnames=keys)
+            csvWriter.writeheader()
+            for row in processed_data:
                 csvWriter.writerow(row)
     print(f'./csv/{area}술집_processed_opentime_data.csv 생성이 완료되었습니다.')
