@@ -9,7 +9,7 @@ import csv
 
 # 페이지의 맨 밑까지 스크롤 (50 ~ 55개 상점 정보)
 def scroll_down(crawler):
-    for _ in range(6):
+    for _ in range(10):
         body = crawler.find_element(By.CSS_SELECTOR, 'body')
         body.send_keys(Keys.PAGE_DOWN)
         body.send_keys(Keys.PAGE_DOWN)
@@ -33,7 +33,7 @@ def naver_crawler(area):
 
     # 크롤링할 url로 이동
     crawler.get(main_url) # 웹페이지 해당 주소 이동
-    crawler.implicitly_wait(3) # 로딩이 끝날동안 기다리기
+    crawler.implicitly_wait(5) # 로딩이 끝날동안 기다리기
 
     # 크롤링한 상점들의 정보를 담는 리스트
     crawl_data = []
@@ -90,13 +90,13 @@ def naver_crawler(area):
             # frame 밖으로 나가기
             crawler.switch_to.default_content()
             
-            crawler.implicitly_wait(1)
+            crawler.implicitly_wait(3)
 
             # entryIframe 찾아 들어오기
             entryIframe = crawler.find_element(By.ID, 'entryIframe')
             crawler.switch_to.frame(entryIframe)
 
-            crawler.implicitly_wait(1)
+            crawler.implicitly_wait(3)
             # time.sleep(1) # 왜인지는 모르지만 crawler.implicitly_wait(5) 쓰면 안된다고 함
 
             # 가게 별점
@@ -106,7 +106,7 @@ def naver_crawler(area):
                 shop_star_rating = null
             print(f'별점: {shop_star_rating}')
 
-            crawler.implicitly_wait(1)
+            crawler.implicitly_wait(3)
 
             # 가게 주소
             try:
@@ -115,12 +115,12 @@ def naver_crawler(area):
                 shop_address = null
             print(f'주소: {shop_address}')
 
-            crawler.implicitly_wait(1)
+            crawler.implicitly_wait(3)
 
             # 가게 영업시간
             try:
                 crawler.find_element(By.CLASS_NAME, 'gKP9i.RMgN0').click()
-                crawler.implicitly_wait(1)
+                crawler.implicitly_wait(3)
                 # 가게 요일별 영업시간
                 time_info = crawler.find_elements(By.CLASS_NAME,'w9QyJ')
                 time_info = [element.text for element in time_info]
@@ -147,7 +147,7 @@ def naver_crawler(area):
     
     crawler.quit()
 
-    with open(f'./csv/{area}술집.csv', 'w', encoding= 'UTF-8') as file:
+    with open(f'./csv/{area}.csv', 'w', encoding= 'UTF-8') as file:
         csvWriter = csv.DictWriter(file, fieldnames=values)
         csvWriter.writeheader()
         for row in crawl_data:
