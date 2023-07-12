@@ -27,26 +27,33 @@ def processed_data_to_csv(area):
             for day in shop_open_info[1:]: # 0번째는 현재 영업중 정보
                 day = day.split(', ')
                 if len(day) >= 3:
-                    day_of_the_week, day_info, day_last_order = day[0], day[1], day[2]
+                    yoil, time_info, day_last_order = day[0], day[1], day[2]
                 elif len(day) >= 2:
-                    day_of_the_week, day_info, day_last_order = day[0], day[1], null
+                    yoil, time_info, day_last_order = day[0], day[1], null
                 else:
-                    day_of_the_week, day_info, day_last_order = day[0], null, null
+                    yoil, time_info, day_last_order = day[0], null, null
                     
-                if '휴무' in day_info:
-                    day_info = "휴무"
+                if '휴무' in time_info:
+                    time_info = "휴무"
+                
 
                 if '라스트오더' in day_last_order:
                     if '시' in day_last_order:
                         if '분' in day_last_order: # 21시 30분에 라스트오더
-                            day_last_order = day_last_order.split('시', '분')[0] + ':' +day_last_order.split('시', '분')[1]
+                            day_last_order = f"{int(day_last_order.split('시', '분')[0]):02d}:{int(day_last_order.split('시', '분')[1]):02d}"
                         else: #21시에 라스트오더 (이건 있는 경우인지 모르겠음)
-                            day_last_order = day_last_order.split('시')[0] + ':00'
+                            day_last_order = f"{int(day_last_order.split('시')[0]):02d}:00"
                     else: # 23:00 라스트오더
                         day_last_order = day_last_order.split(' ')[0]
-                        
-                if day_of_the_week[0] in ['월', '화', '수', '목', '금', '토', '일']:
-                    shop_open_info_by_day[day_of_the_week] = {"open_time": day_info, "last_order_time": day_last_order}
+
+                print(yoil, shop_name)
+                
+                if yoil and yoil[0] in ["매일"]:
+                    for key in shop_open_info_by_day.keys():
+                        shop_open_info_by_day[key] = {"open_time": time_info, "last_order_time": day_last_order}
+
+                elif yoil and yoil[0] in ['월', '화', '수', '목', '금', '토', '일']:
+                    shop_open_info_by_day[yoil] = {"open_time": time_info, "last_order_time": day_last_order}
                                 
             keys = ['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_open_info', 'shop_contact']
             values = [shop_name, shop_type, shop_star_rating, shop_address, list(shop_open_info_by_day.items()), shop_contact]
