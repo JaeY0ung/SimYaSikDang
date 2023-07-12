@@ -120,6 +120,7 @@ def naver_crawler(area):
             # 가게 영업시간
             try:
                 crawler.find_element(By.CLASS_NAME, 'gKP9i.RMgN0').click()
+                # time.sleep(1.5)
                 crawler.implicitly_wait(3)
                 # 가게 요일별 영업시간
                 time_info = crawler.find_elements(By.CLASS_NAME,'w9QyJ')

@@ -45,7 +45,7 @@ def processed_data_to_csv(area):
                     else: # 23:00 라스트오더
                         day_last_order = day_last_order.split(' ')[0]
                         
-                if day_of_the_week in ['월', '화', '수', '목', '금', '토', '일']:
+                if day_of_the_week[0] in ['월', '화', '수', '목', '금', '토', '일']:
                     shop_open_info_by_day[day_of_the_week] = {"open_time": day_info, "last_order_time": day_last_order}
                                 
             keys = ['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_open_info', 'shop_contact']
