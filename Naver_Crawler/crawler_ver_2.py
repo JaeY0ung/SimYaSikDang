@@ -70,19 +70,18 @@ def naver_crawler(area):
 
             # 가게 명
             shop_name = shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').text
-            print(f'가게명: {shop_name}')
+            # print(f'가게명: {shop_name}')
 
             # 가게 종류
             try:
                 shop_type = shop.find_element(By.CLASS_NAME, 'KCMnt').text
             except:
                 shop_type = null
-            print(f'가게 종류: {shop_type}')
+            # print(f'가게 종류: {shop_type}')
 
             crawler.implicitly_wait(2)
 
             # 가게명 클릭하여 세부창 띄우기
-            # shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').click()
             shop.find_element(By.CLASS_NAME, 'N_KDL').click()
 
             crawler.implicitly_wait(1)
@@ -104,7 +103,7 @@ def naver_crawler(area):
                 shop_star_rating = crawler.find_element(By.CSS_SELECTOR, '#app-root > div > div > div > div.place_section.OP4V8 > div.zD5Nm.f7aZ0 > div.dAsGb > span.PXMot.LXIwF > em').text
             except:
                 shop_star_rating = null
-            print(f'별점: {shop_star_rating}')
+            # print(f'별점: {shop_star_rating}')
 
             crawler.implicitly_wait(3)
 
@@ -113,15 +112,16 @@ def naver_crawler(area):
                 shop_address = crawler.find_element(By.CLASS_NAME, 'LDgIH').text
             except:
                 shop_address = null
-            print(f'주소: {shop_address}')
+            # print(f'주소: {shop_address}')
 
             crawler.implicitly_wait(3)
 
             # 가게 영업시간
             try:
                 crawler.find_element(By.CLASS_NAME, 'gKP9i.RMgN0').click()
-                # time.sleep(1.5)
-                crawler.implicitly_wait(3)
+                time.sleep(1)
+                # crawler.implicitly_wait(3)
+
                 # 가게 요일별 영업시간
                 time_info = crawler.find_elements(By.CLASS_NAME,'w9QyJ')
                 time_info = [element.text for element in time_info]
@@ -131,7 +131,7 @@ def naver_crawler(area):
                     shop_time_info.append(day_info)
             except:
                 shop_time_info = null
-            print(f"영업시간 정보: {shop_time_info}")
+            # print(f"영업시간 정보: {shop_time_info}")
 
             crawler.implicitly_wait(1)
 
@@ -140,11 +140,12 @@ def naver_crawler(area):
                 shop_contact = crawler.find_element(By.CLASS_NAME,'xlx7Q').text
             except:
                 shop_contact = null
-            print(f'연락처: {shop_contact}')
+            # print(f'연락처: {shop_contact}')
 
             values = ['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_time_info', 'shop_contact']
             keys = [shop_name, shop_type, shop_star_rating, shop_address, shop_time_info, shop_contact]
             crawl_data.append(dict(zip(values, keys)))
+            print(f"{shop_name} 영업시간: {shop_time_info}")
     
     crawler.quit()
 

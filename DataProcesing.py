@@ -30,30 +30,46 @@ def processed_data_to_csv(area):
                     yoil, time_info, day_last_order = day[0], day[1], day[2]
                 elif len(day) >= 2:
                     yoil, time_info, day_last_order = day[0], day[1], null
-                else:
+                elif len(day) == 1:
                     yoil, time_info, day_last_order = day[0], null, null
+                else:
+                    yoil, time_info, day_last_order = null, null, null
                     
                 if '휴무' in time_info:
                     time_info = "휴무"
-                
+
+                elif '-' in time_info and '/' not in time_info:
+                    i =  time_info.index('-')
+                    start = time_info[i-6 : i-1]
+                    end = time_info[i+2: i+7]
+                    # print(shop_name, start, end) # debug test
+                    start_hour = int(start[:2])
+                    start_minute = int(start[3:])
+                    end_hour = int(end[:2])
+                    end_minute = int(end[3:])
+                    if start_hour > end_hour:
+                        end_hour += 24
+                    time_info = f"{start_hour:02d}:{start_minute:02d}-{end_hour:02d}:{end_minute:02d}"
 
                 if '라스트오더' in day_last_order:
                     if '시' in day_last_order:
                         if '분' in day_last_order: # 21시 30분에 라스트오더
                             day_last_order = f"{int(day_last_order.split('시', '분')[0]):02d}:{int(day_last_order.split('시', '분')[1]):02d}"
-                        else: #21시에 라스트오더 (이건 있는 경우인지 모르겠음)
+                        else: #21시에 라스트 오더 (이건 있는 경우인지 모르겠음)
                             day_last_order = f"{int(day_last_order.split('시')[0]):02d}:00"
-                    else: # 23:00 라스트오더
+                    else: # ex. 23:00 라스트오더
                         day_last_order = day_last_order.split(' ')[0]
 
-                print(yoil, shop_name)
-                
-                if yoil and yoil[0] in ["매일"]:
-                    for key in shop_open_info_by_day.keys():
-                        shop_open_info_by_day[key] = {"open_time": time_info, "last_order_time": day_last_order}
-
-                elif yoil and yoil[0] in ['월', '화', '수', '목', '금', '토', '일']:
-                    shop_open_info_by_day[yoil] = {"open_time": time_info, "last_order_time": day_last_order}
+                # print(yoil, shop_name, len(yoil)) # test debug
+                try:
+                    if yoil in ["매일"]:
+                        # 모든 요일 처리
+                        for key in shop_open_info_by_day.keys():
+                            shop_open_info_by_day[key] = {"open_time": time_info, "last_order_time": day_last_order}
+                    elif yoil[0] in ['월', '화', '수', '목', '금', '토', '일']:
+                        shop_open_info_by_day[yoil] = {"open_time": time_info, "last_order_time": day_last_order}
+                except:
+                    pass
                                 
             keys = ['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_open_info', 'shop_contact']
             values = [shop_name, shop_type, shop_star_rating, shop_address, list(shop_open_info_by_day.items()), shop_contact]
@@ -65,4 +81,5 @@ def processed_data_to_csv(area):
             csvWriter.writeheader()
             for row in processed_data:
                 csvWriter.writerow(row)
+                
     print(f'./csv/{area}_processed.csv 생성이 완료되었습니다.')
