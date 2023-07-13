@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from naver_crawler.crawler_ver_2 import naver_crawler
 from FileTransform import csv_to_excel, load_csv
 import seoul_area_data
@@ -26,22 +28,30 @@ areas_dict = seoul_area_data.areas_dict_test
 #     '서대문구':{'신촌' : "./csv/신촌_processed.csv"},
 #     '경기도': {'일산' : "./csv/망원_processed.csv"}
 # }
+
 # for gu in areas_csvdata.keys():
 #     for area in areas_csvdata[gu].keys():
 #         csvfile = areas_csvdata[gu][area]
 
 
+# 오늘이 무슨 요일인지 구하는 함수
+def yoil():
+    today = datetime.today().weekday()
+    yoil_arr = ['월','화','수','목','금','토','일']
+    return yoil_arr[today]
+
 # TODO: 일단 하나의 지역(망원)의 술집 관련 페이지 제작
 # TODO: 이후 모든 지역마다 페이지 생성
-
-data = load_csv("./csv/망원_processed.csv")
-print(data)
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template("home.html", data=data)
+    shopdata = load_csv("./csv/망원_processed.csv")
+    today_yoil = yoil()
+    for shop in shopdata:
+        print(shop[f'{today_yoil}opening_hours'])
+    return render_template("home.html", shopdata=shopdata, today_yoil=today_yoil)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)

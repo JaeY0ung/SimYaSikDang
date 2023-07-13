@@ -15,13 +15,13 @@ def processed_data_to_csv(area):
             shop_open_info = line['shop_time_info']
             shop_contact = line['shop_contact']
 
-            shop_open_info_by_day = {'월': {"open_time": null, "last_order_time": null},
-                                     '화': {"open_time": null, "last_order_time": null},
-                                     '수': {"open_time": null, "last_order_time": null},
-                                     '목': {"open_time": null, "last_order_time": null},
-                                     '금': {"open_time": null, "last_order_time": null},
-                                     '토': {"open_time": null, "last_order_time": null},
-                                     '일': {"open_time": null, "last_order_time": null} }
+            shop_open_info_by_day = {'월': {"opening_hours": null, "last_order_time": null},
+                                     '화': {"opening_hours": null, "last_order_time": null},
+                                     '수': {"opening_hours": null, "last_order_time": null},
+                                     '목': {"opening_hours": null, "last_order_time": null},
+                                     '금': {"opening_hours": null, "last_order_time": null},
+                                     '토': {"opening_hours": null, "last_order_time": null},
+                                     '일': {"opening_hours": null, "last_order_time": null} }
             shop_open_info = shop_open_info.replace("'", "").strip('[[').strip(']]').split('], [')
             
             for day in shop_open_info[1:]: # 0번째는 현재 영업중 정보
@@ -65,14 +65,31 @@ def processed_data_to_csv(area):
                     if yoil in ["매일"]:
                         # 모든 요일 처리
                         for key in shop_open_info_by_day.keys():
-                            shop_open_info_by_day[key] = {"open_time": time_info, "last_order_time": day_last_order}
+                            shop_open_info_by_day[key] = {"opening_hours": time_info, "last_order_time": day_last_order}
                     elif yoil[0] in ['월', '화', '수', '목', '금', '토', '일']:
-                        shop_open_info_by_day[yoil] = {"open_time": time_info, "last_order_time": day_last_order}
+                        shop_open_info_by_day[yoil] = {"opening_hours": time_info, "last_order_time": day_last_order}
                 except:
                     pass
                                 
-            keys = ['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_open_info', 'shop_contact']
-            values = [shop_name, shop_type, shop_star_rating, shop_address, list(shop_open_info_by_day.items()), shop_contact]
+            keys = ['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 
+                    '월opening_hours', '월last_order_time',
+                    '화opening_hours', '화last_order_time',
+                    '수opening_hours', '수last_order_time',
+                    '목opening_hours', '목last_order_time',
+                    '금opening_hours', '금last_order_time',
+                    '토opening_hours', '토last_order_time',
+                    '일opening_hours', '일last_order_time',
+                    'shop_contact']
+            
+            values = [shop_name, shop_type, shop_star_rating, shop_address, 
+                      shop_open_info_by_day['월']['opening_hours'], shop_open_info_by_day['월']['last_order_time'],
+                      shop_open_info_by_day['화']['opening_hours'], shop_open_info_by_day['화']['last_order_time'],
+                      shop_open_info_by_day['수']['opening_hours'], shop_open_info_by_day['수']['last_order_time'],
+                      shop_open_info_by_day['목']['opening_hours'], shop_open_info_by_day['목']['last_order_time'],
+                      shop_open_info_by_day['금']['opening_hours'], shop_open_info_by_day['금']['last_order_time'],
+                      shop_open_info_by_day['토']['opening_hours'], shop_open_info_by_day['토']['last_order_time'],
+                      shop_open_info_by_day['일']['opening_hours'], shop_open_info_by_day['월']['last_order_time'],
+                      shop_contact]
             processed_data.append(dict(zip(keys, values)))
 
     # csv 파일에 저장
