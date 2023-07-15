@@ -4,76 +4,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ today_yoil }}요일 심야식당</title>
+    <title>심야식당</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
-        td, th {
+        .cover {
+            display: flex;
+            justify-content: space-between;
+        }
+        a {
+            color: black;
+        }
+        td, th, .center {
             /* 수평 중앙 정렬하기 */
             text-align: center;
         }
+        .fl-r {
+            float: right;
+            margin-right: 40px;
+        }
+        .mg-r{
+            margin-right: 10px;
+        }
+        .mg-l {
+            margin-left: 30px;
+        }
+        /* class가 fl-r인 element 밑의 select에 대해 적용된다 */
+        .fl-r select{
+            margin-right: 10px;
+            width: 100px;
+            height: 30px;
+        }
+        input{
+            height: 30px;
+        }
     </style>
-    </head>
-
+</head>
 <body>
     <br>
-    <h1><strong>{{ today_yoil }}요일 심야 식당</strong></h1>
+    <!-- 양 끝 정렬 -->
+    <div class="cover">
+        <div><h6 class="mg-l">오늘은 {{ today_yoil }}요일!</h6></div>
+        <div class="fl-r">
+            <span class="mg-r"><a href="#">로그인</a></span>
+            <span><a href="#">회원가입</a></span>
+        </div>
+    </div>
     <br>
-    <table class="table">
-        <thead>
-            <tr>
-                <!-- 다른 테이블과 가로 길이 맞추기 -->
-                <td scope="col" id="open_shop_li" colspan="1"></td>
-                <td scope="col" id="open_shop_li" colspan="4">영업 중인 술집 검색</td>
-                <td scope="col" id="favorite_shop" colspan="4">나의 즐겨찾기</td>
-                <td scope="col" id="open_shop_li" colspan="1"></td>
-
-            </tr>
-        </thead>
-        <tr>
-            <th scope="col" width="80" >즐겨찾기</th>
-            <th scope="col" width="110">상점 명</th>
-            <th scope="col" width="80">별점</th>
-            <th scope="col" width="80">영업 여부</th>
-            <th scope="col" width="80">가게 종류</th>
-            <th scope="col" width="120">영업 시간<br>(오늘: {{ today_yoil }})</th>
-            <th scope="col" width="150">가게 연락처</th>
-            <th scope="col" width="150">가게 주소</th>
-            <th scope="col" width="150">역에서부터의<br>거리</th>
-            <th scope="col" width="80">잘못된 정보<br>신고하기</th>
-        </tr>
-
-
-        <tbody>
-            {% for shop in shopdata %}
-            <tr>
-                <td><img src="{{ url_for('static', filename='IMG/star/empty_yellow_star.png') }}" alt="star_img" width="20" ></td>
-                <td>{{ shop['shop_name'] }}</td>
-                <td>{{ shop['shop_star_rating'] }}</td>
-                {% set shop_time = shop[today_yoil + "opening_hours"] %}
-                {% set shop_open_time = shop_time[:2]| int * 100 + shop_time[3:5] | int %}
-                {% set shop_close_time = shop_time[-5:-3]| int * 100 + shop_time[-2:] | int %}
-                <td>
-                {% if shop_time == null%}
-                    {{ null }}
-                {% elif timenow[0]*100 + timenow[1] < shop_open_time %}
-                    영업 전
-                {% elif timenow[0]*100 + timenow[1] <= shop_close_time %}
-                    영업 중
+    <h1 class="center">심야식당</h1>
+    <div class="fl-r">
+        <form method="get">
+            <select name="area">
+                {% if area %}
+                    <!-- disabled 속성을 제거하여 클릭하지 않아도 계속해서 값을 이것으로 가지도록 함) -->
+                    <option value="{{ area }}" selected hidden>{{ area }}</option>
                 {% else %}
-                    영업 종료
+                    <option value="{{ area }}" selected disabled hidden>지역 선택</option>
                 {% endif %}
-                </td>
-                <td>{{ shop['shop_type'] }}</td>
-                <td>{{ shop_time }}</td>
-                <td>{{ shop['shop_contact'] }}</td>
-                <td>{{ shop['shop_address'] }}</td>
-                <td>역에서 거리</td>
-                <td>신고버튼</td>
+                {% for i in areas %}
+                    <option value="{{ i }}">{{ i }}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" value="이동">
+        </form>
+    </div>
+    <br>
+    <div>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <!-- 다른 테이블과 가로 길이 맞추기 -->
+                    <td scope="col" id="open_shop_li" colspan="1"></td>
+                    <td scope="col" id="open_shop_li" colspan="4">영업 중인 술집 검색</td>
+                    <td scope="col" id="favorite_shop" colspan="4">나의 즐겨찾기</td>
+                    <td scope="col" id="open_shop_li" colspan="1"></td>
+
+                </tr>
+            </thead>
+            <tr>
+                <th scope="col" width="80" >즐겨찾기</th>
+                <th scope="col" width="110">상점 명</th>
+                <th scope="col" width="80">별점</th>
+                <th scope="col" width="80">영업 여부</th>
+                <th scope="col" width="80">가게 종류</th>
+                <th scope="col" width="120">영업 시간<br>(오늘: {{ today_yoil }})</th>
+                <th scope="col" width="150">가게 연락처</th>
+                <th scope="col" width="150">가게 주소</th>
+                <th scope="col" width="150">역에서부터의<br>거리</th>
+                <th scope="col" width="80">잘못된 정보<br>신고하기</th>
             </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+
+            <tbody class="table-group-divider">
+                {% for shop in shopdata %}
+                <tr>
+                    <td><img src="{{ url_for('static', filename='IMG/star/empty_yellow_star.png') }}" alt="star_img" width="20" ></td>
+                    <td>{{ shop['name'] }}</td>
+                    <td>{{ shop['star_rating'] }}</td>
+                    {% set shop_time = shop[today_yoil + "opening_hours"] %}
+                    {% set shop_open_time = shop_time[:2]| int * 100 + shop_time[3:5] | int %}
+                    {% set shop_close_time = shop_time[-5:-3]| int * 100 + shop_time[-2:] | int %}
+                    <td>
+                    {% if shop_time == null%}
+                        {{ null }}
+                    {% elif timenow[0]*100 + timenow[1] < shop_open_time %}
+                        영업 전
+                    {% elif timenow[0]*100 + timenow[1] <= shop_close_time %}
+                        영업 중
+                    {% else %}
+                        영업 종료
+                    {% endif %}
+                    </td>
+                    <td>{{ shop['type'] }}</td>
+                    <td>{{ shop_time }}</td>
+                    <td>{{ shop['contact'] }}</td>
+                    <td>{{ shop['address'] }}</td>
+                    <td>역에서 거리</td>
+                    <td>신고버튼</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     <nav aria-label="Page navigation example">
         <ul class="pagination" style="justify-content : center;">
             {% if move_page_front %}

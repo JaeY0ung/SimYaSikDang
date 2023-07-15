@@ -2,20 +2,7 @@ from flask import Flask, render_template, request
 from Pagination.pagination import Pagination
 from FileTransform.fileTransform import load_csv
 from datetime import datetime
-
-    
-# areas_csvdata = {
-#     '마포구': {'망원' : "./csv/망원_processed.csv", 
-#             '연남동' : "./csv/연남동_processed.csv", 
-#             '합정' : "./csv/합정_processed.csv", 
-#             '홍대' : "./csv/홍대_processed.csv"},
-#     '서대문구':{'신촌' : "./csv/신촌_processed.csv"},
-#     '경기도': {'일산' : "./csv/망원_processed.csv"}
-# }
-
-# for gu in areas_csvdata.keys():
-#     for area in areas_csvdata[gu].keys():
-#         csvfile = areas_csvdata[gu][area]
+import src.seoul_area_data as seoul_area_data
 
 # 오늘이 무슨 요일인지 구하는 함수
 def yoil():
@@ -30,12 +17,23 @@ def time():
 
 null = '정보 없음'
 
+areas_dict = seoul_area_data.areas_dict_test
+
+areas = []
+for gu in areas_dict.keys():
+    for area in areas_dict[gu]:
+        areas.append(area)
+
 app = Flask(__name__)
 
 @app.route('/')
 def home():
     page = request.args.get('page', default=1, type=int)
-    shopdata = load_csv("./csv/망원_processed.csv")
+    area = request.args.get('area', default='', type=str)
+    if area:
+        shopdata = load_csv(f"./csv/{area}_processed.csv")
+    else:
+        shopdata = load_csv("./csv/망원_processed.csv")
     today_yoil = yoil()
     timenow = time()
     
@@ -45,7 +43,8 @@ def home():
     pagemaker = Pagination()
     pagemaker.makepagination(shopdata, page)
 
-    return render_template("home.html", today_yoil = today_yoil, timenow = timenow, null = null,
+    return render_template("home.html", today_yoil = today_yoil, timenow = timenow, 
+                           areas=areas, area=area, null = null,
                            shopdata = shopdata[pagemaker.start_index : pagemaker.end_index + 1],
                            page = page, total_page = pagemaker.total_page, 
                            pagination_start = pagemaker.pagination_start, 

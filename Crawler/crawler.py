@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 import csv
 
-# 페이지의 맨 밑까지 스크롤 (50 ~ 55개 상점 정보)
+# 페이지의 맨 밑까지 스크롤 (맥 + 34인치 모니터 기준/ 한페이지에 55개 상점 정보)
 def scroll_down(crawler):
     for _ in range(10):
         body = crawler.find_element(By.CSS_SELECTOR, 'body')
@@ -20,6 +20,7 @@ def scroll_down(crawler):
         time.sleep(1)
     return
 
+# 내 방 네트워크 환경에서 맥북 에어를 이용하여 합정 5페이지 크롤링에 걸린 시간: 12분
 def naver_crawler(area):
     null = "정보 없음"
 
@@ -37,8 +38,9 @@ def naver_crawler(area):
 
     # 크롤링한 상점들의 정보를 담는 리스트
     crawl_data = []
-    
-    for page in range(1,6): # 페이지 클릭수
+
+    # 클릭할 페이지
+    for page in range(1,6):
         # default
         crawler.switch_to.default_content()
         # 프레임 이동
@@ -49,103 +51,93 @@ def naver_crawler(area):
         # page 클릭하여 이동
         crawler.find_element(By.CSS_SELECTOR, f"#app-root > div > div.XUrfU > div.zRM9F > a:nth-child({page})").click()
 
+        # 스크롤 가능하도록 body 중 아무 동작 없는 곳 클릭
         crawler.find_element(By.CLASS_NAME, "CHC5F").click()
         crawler.implicitly_wait(2)
-
         # 페이지의 맨 밑까지 스크롤
         scroll_down(crawler)
 
         # shop들의 목록이 들어있는 className 찾기
         shops = crawler.find_elements(By.CLASS_NAME, 'UEzoS.rTjJo')
-
         # 가게들 정보 크롤링 시작
         for shop in shops:
+            name, type, star_rating, review_sum, address, time_info, contact = null, null, null, null, null, null, null
 
-            # frame 밖으로 나가기
+            # default 콘텐츠로 이동: frame 밖으로 나가기
             crawler.switch_to.default_content()
-
             # searchIframe 찾아 들어오기
             searchIframe = crawler.find_element(By.ID, 'searchIframe')
             crawler.switch_to.frame(searchIframe)
 
             # 가게 명
-            shop_name = shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').text
-            # print(f'가게명: {shop_name}')
+            name = shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').text
 
             # 가게 종류
             try:
-                shop_type = shop.find_element(By.CLASS_NAME, 'KCMnt').text
+                type = shop.find_element(By.CLASS_NAME, 'KCMnt').text
             except:
-                shop_type = null
-            # print(f'가게 종류: {shop_type}')
-
+                type = null
             crawler.implicitly_wait(2)
 
             # 가게명 클릭하여 세부창 띄우기
             shop.find_element(By.CLASS_NAME, 'N_KDL').click()
-
             crawler.implicitly_wait(1)
-            
+        
             # frame 밖으로 나가기
             crawler.switch_to.default_content()
-            
-            crawler.implicitly_wait(3)
-
             # entryIframe 찾아 들어오기
             entryIframe = crawler.find_element(By.ID, 'entryIframe')
             crawler.switch_to.frame(entryIframe)
-
             crawler.implicitly_wait(3)
-            # time.sleep(1) # 왜인지는 모르지만 crawler.implicitly_wait(5) 쓰면 안된다고 함
 
             # 가게 별점
             try:
-                shop_star_rating = crawler.find_element(By.CSS_SELECTOR, '#app-root > div > div > div > div.place_section.OP4V8 > div.zD5Nm.f7aZ0 > div.dAsGb > span.PXMot.LXIwF > em').text
+                star_rating = crawler.find_element(By.CSS_SELECTOR, '#app-root > div > div > div > div.place_section.OP4V8 > div.zD5Nm.f7aZ0 > div.dAsGb > span.PXMot.LXIwF > em').text
             except:
-                shop_star_rating = null
-            # print(f'별점: {shop_star_rating}')
+                star_rating = null
 
-            crawler.implicitly_wait(3)
+            # 방문자리뷰 + 블로그리뷰수
+            try:
+                review_sum = 0
+                reviews = crawler.find_elements(By.CSS_SELECTOR, '#app-root > div > div > div > div.place_section.OP4V8 > div.zD5Nm.f7aZ0 > div.dAsGb > span > a > em')
+                for review in reviews:
+                    review_sum += int(review.text)
+            except:
+                review_sum = null
+            time.sleep(0.5)
 
             # 가게 주소
             try:
-                shop_address = crawler.find_element(By.CLASS_NAME, 'LDgIH').text
+                address = crawler.find_element(By.CLASS_NAME, 'LDgIH').text
             except:
-                shop_address = null
-            # print(f'주소: {shop_address}')
-
+                address = null
             crawler.implicitly_wait(3)
 
             # 가게 영업시간
             try:
                 crawler.find_element(By.CLASS_NAME, 'gKP9i.RMgN0').click()
-                time.sleep(1)
-                # crawler.implicitly_wait(3)
-
+                crawler.implicitly_wait(3)
                 # 가게 요일별 영업시간
-                time_info = crawler.find_elements(By.CLASS_NAME,'w9QyJ')
-                time_info = [element.text for element in time_info]
-                shop_time_info = []
-                for day_info in time_info:
-                    day_info = day_info.replace("\n", "=").replace("=접기", "").split('=')
-                    shop_time_info.append(day_info)
+                elements = crawler.find_elements(By.CLASS_NAME,'w9QyJ')
+                days_time_info = [element.text for element in elements]
+                time_info = []
+                for day_time_info in days_time_info:
+                    day_time_info = day_time_info.replace("\n", "=").replace("=접기", "").split('=')
+                    time_info.append(day_time_info)
             except:
-                shop_time_info = null
-            # print(f"영업시간 정보: {shop_time_info}")
-
+                time_info = null
             crawler.implicitly_wait(1)
 
             # 가게 연락처
             try:
-                shop_contact = crawler.find_element(By.CLASS_NAME,'xlx7Q').text
+                contact = crawler.find_element(By.CLASS_NAME,'xlx7Q').text
             except:
-                shop_contact = null
-            # print(f'연락처: {shop_contact}')
+                contact = null
 
-            values = ['shop_name', 'shop_type', 'shop_star_rating', 'shop_address', 'shop_time_info', 'shop_contact']
-            keys = [shop_name, shop_type, shop_star_rating, shop_address, shop_time_info, shop_contact]
+            values = ['name', 'type', 'star_rating', 'review_sum', 'address', 'time_info', 'contact']
+            keys = [name, type, star_rating, review_sum, address, time_info, contact]
             crawl_data.append(dict(zip(values, keys)))
-            print(f"{shop_name} 영업시간: {shop_time_info}")
+            print(f"{name} 영업시간: {time_info}")
     
     crawler.quit()
 
