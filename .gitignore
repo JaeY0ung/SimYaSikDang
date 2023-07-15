@@ -2,5 +2,6 @@
 __pycache__
 .log
 .json
+.db
 
 requirements.txt
