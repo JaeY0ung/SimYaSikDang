@@ -1,24 +1,8 @@
+from flask import Flask, render_template, request
+from Pagination.pagination import Pagination
+from FileTransform.fileTransform import load_csv
 from datetime import datetime
 
-from naver_crawler.crawler_ver_2 import naver_crawler
-from FileTransform import csv_to_excel, load_csv
-import seoul_area_data
-from DataProcesing import processed_data_to_csv
-from flask import Flask, render_template
-
-areas_dict = seoul_area_data.areas_dict_test
-
-# # 데이터 크롤링하여 csv파일과 엑셀파일로 저장
-# for gu, dong in areas_dict.items():
-#     for area in dong:
-#         naver_crawler(area)
-#         csv_to_excel(f"./csv/{area}.csv", f"./excel/{area}.xlsx")  # 엑셀에 데이터 저장
-
-# # 영업시간 데이터 처리하여 csv 파일과 엑셀파일로 저장
-# for gu, dong in areas_dict.items():
-#     for area in dong:          
-#         processed_data_to_csv(area)
-#         csv_to_excel(f"./csv/{area}_processed.csv", f"./excel/{area}_processed.xlsx")
     
 # areas_csvdata = {
 #     '마포구': {'망원' : "./csv/망원_processed.csv", 
@@ -33,25 +17,41 @@ areas_dict = seoul_area_data.areas_dict_test
 #     for area in areas_csvdata[gu].keys():
 #         csvfile = areas_csvdata[gu][area]
 
-
 # 오늘이 무슨 요일인지 구하는 함수
 def yoil():
     today = datetime.today().weekday()
     yoil_arr = ['월','화','수','목','금','토','일']
     return yoil_arr[today]
 
-# TODO: 일단 하나의 지역(망원)의 술집 관련 페이지 제작
-# TODO: 이후 모든 지역마다 페이지 생성
+# 지금이 몇신지 구하는 함수 (ex. 18:30)
+def time():
+    now = datetime.now()
+    return now.hour, now.minute
+
+null = '정보 없음'
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
+    page = request.args.get('page', default=1, type=int)
     shopdata = load_csv("./csv/망원_processed.csv")
     today_yoil = yoil()
+    timenow = time()
+    
     for shop in shopdata:
         print(shop[f'{today_yoil}opening_hours'])
-    return render_template("home.html", shopdata=shopdata, today_yoil=today_yoil)
+
+    pagemaker = Pagination()
+    pagemaker.makepagination(shopdata, page)
+
+    return render_template("home.html", today_yoil = today_yoil, timenow = timenow, null = null,
+                           shopdata = shopdata[pagemaker.start_index : pagemaker.end_index + 1],
+                           page = page, total_page = pagemaker.total_page, 
+                           pagination_start = pagemaker.pagination_start, 
+                           pagination_end = pagemaker.pagination_end, 
+                           move_page_front = pagemaker.move_page_front, 
+                           move_page_back = pagemaker.move_page_back)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=8080, debug=True)

@@ -1,48 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>심야식당</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-</head>
+    <title>{{ today_yoil }}요일 심야식당</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <style>
+        td, th {
+            /* 수평 중앙 정렬하기 */
+            text-align: center;
+        }
+    </style>
+    </head>
+
 <body>
-    <h1><mark>심야 식당</mark></h1>
-
-
+    <br>
+    <h1><strong>{{ today_yoil }}요일 심야 식당</strong></h1>
+    <br>
     <table class="table">
         <thead>
-            <!-- 다른 테이블과 가로 길이 맞추기 -->
             <tr>
-                <th scope="col" id="open_shop_li">영업 중인 술집 검색</th>
-                <th scope="col" id="favorite_shop">나의 즐겨찾기</th>
-            </tr>
-            <tr>
-                <!-- <th scope="col">즐겨찾기</th> -->
-                <th scope="col">상점명</th>
-                <th scope="col">별점</th>
-                <!-- <th scope="col">영업중/종료</th> -->
-                <th scope="col">가게종류</th>
-                <th scope="col">영업시간</th>
-                <th scope="col">연락처</th>
-                <!-- <th scope="col">역에서부터의 거리</th> -->
-                <!-- <th scope="col">잘못된정보 신고하기</th> -->
+                <!-- 다른 테이블과 가로 길이 맞추기 -->
+                <td scope="col" id="open_shop_li" colspan="1"></td>
+                <td scope="col" id="open_shop_li" colspan="4">영업 중인 술집 검색</td>
+                <td scope="col" id="favorite_shop" colspan="3">나의 즐겨찾기</td>
+                <td scope="col" id="open_shop_li" colspan="1"></td>
+
             </tr>
         </thead>
+        <tr>
+            <th scope="col" width="80" >즐겨찾기</th>
+            <th scope="col" width="110">상점 명</th>
+            <th scope="col" width="80">별점</th>
+            <th scope="col" width="80">영업 여부</th>
+            <th scope="col" width="80">가게 종류</th>
+            <th scope="col" width="120">영업 시간<br>(오늘: {{ today_yoil }})</th>
+            <th scope="col" width="150">가게 연락처</th>
+            <th scope="col" width="150">역에서부터의<br>거리</th>
+            <th scope="col" width="150">잘못된 정보<br>신고하기</th>
+        </tr>
+
+
         <tbody>
             {% for shop in shopdata %}
-                <tr>
-                    {% set x = today_yoil + "opening_hours" %}
-                    <th scope="row">{{ shop['shop_name'] }}</th>
-                    <td>{{ shop['shop_star_rating'] }}</td>
-                    <td>{{ shop['shop_type'] }}</td>
-                    <td>{{ shop[x]}}</td>
-                    <td>{{ shop['shop_contact'] }}</td>
-                </tr>
+            <tr>
+                <td><img src="{{ url_for('static', filename='IMG/star/empty_yellow_star.png') }}" alt="star_img" width="20" ></td>
+                <td>{{ shop['shop_name'] }}</td>
+                <td>{{ shop['shop_star_rating'] }}</td>
+                {% set shop_time = shop[today_yoil + "opening_hours"] %}
+                {% set shop_open_time = shop_time[:2]| int * 100 + shop_time[3:5] | int %}
+                {% set shop_close_time = shop_time[-5:-3]| int * 100 + shop_time[-2:] | int %}
+                <td>
+                {% if shop_time == null%}
+                    {{ null }}
+                {% elif timenow[0]*100 + timenow[1] < shop_open_time %}
+                    영업 전
+                {% elif timenow[0]*100 + timenow[1] <= shop_close_time %}
+                    영업 중
+                {% else %}
+                    영업 종료
+                {% endif %}
+                </td>
+                <td>{{ shop['shop_type'] }}</td>
+                <td>{{ shop_time }}</td>
+                <td>{{ shop['shop_contact'] }}</td>
+                <td>역에서 거리</td>
+                <td>신고버튼</td>
+            </tr>
             {% endfor %}
         </tbody>
-
     </table>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination" style="justify-content : center;">
+            {% if move_page_front %}
+            <li class="page-item"><a class="page-link" href='/?page={{ 1 }}'><span
+                        aria-hidden="true">&laquo;&laquo;</span></a></li>
+            <li class="page-item"><a class="page-link" href='/?page={{ page-5 }}'><span
+                        aria-hidden="true">&laquo;</span></a></li>
+            {% endif %}
+            {% for p in range(pagination_start, pagination_end+1) %}
+
+            <li class="page-item"><a class="page-link" href='/?page={{ p }}'>
+                    {% if page == p %}
+                    <strong><mark>
+                            {% endif %}
+                            {{ p }}
+                            {% if page == p %}
+                    </strong></mark>
+                    {% endif %}
+                </a></li>
+            {% endfor %}
+            {% if move_page_back %}
+            <li class="page-item"><a class="page-link" href='/?page={{ page+5 }}'><span
+                        aria-hidden="true">&raquo;</span></a></li>
+            <li class="page-item"><a class="page-link" href='/?page={{ total_page }}'><span
+                        aria-hidden="true">&raquo;&raquo;</span></a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>
