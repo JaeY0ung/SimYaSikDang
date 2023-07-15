@@ -13,7 +13,8 @@
             justify-content: space-between;
         }
         a {
-            color: black;
+            color: rgb(33, 168, 18);
+            text-decoration: none;
         }
         td, th, .center {
             /* 수평 중앙 정렬하기 */
@@ -82,7 +83,7 @@
                 </tr>
             </thead>
             <tr>
-                <th scope="col" width="80" >즐겨찾기</th>
+                <th scope="col" width="80">즐겨찾기</th>
                 <th scope="col" width="110">상점 명</th>
                 <th scope="col" width="80">별점</th>
                 <th scope="col" width="80">영업 여부</th>
@@ -91,7 +92,7 @@
                 <th scope="col" width="150">가게 연락처</th>
                 <th scope="col" width="150">가게 주소</th>
                 <th scope="col" width="150">역에서부터의<br>거리</th>
-                <th scope="col" width="80">잘못된 정보<br>신고하기</th>
+                <th scope="col" width="60">신고</th>
             </tr>
 
 
@@ -99,7 +100,7 @@
                 {% for shop in shopdata %}
                 <tr>
                     <td><img src="{{ url_for('static', filename='IMG/star/empty_yellow_star.png') }}" alt="star_img" width="20" ></td>
-                    <td>{{ shop['name'] }}</td>
+                    <td><a href="https://map.naver.com/v5/search/{{ shop['name'] }}/place" target="_blank">{{ shop['name'] }}</a></td>
                     <td>{{ shop['star_rating'] }}</td>
                     {% set shop_time = shop[today_yoil + "opening_hours"] %}
                     {% set shop_open_time = shop_time[:2]| int * 100 + shop_time[3:5] | int %}
@@ -118,9 +119,9 @@
                     <td>{{ shop['type'] }}</td>
                     <td>{{ shop_time }}</td>
                     <td>{{ shop['contact'] }}</td>
-                    <td>{{ shop['address'] }}</td>
-                    <td>역에서 거리</td>
-                    <td>신고버튼</td>
+                    <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996,{{ area }} {{ shop['name'] }},1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >{{ shop['address'] }}</a></td>
+                    <td>없앨까?</td>
+                    <td><a style="color: crimson" href="/singo?area={{ area }}&name={{ shop['name'] }}" target="_blank">신고하기</a></td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -144,7 +145,7 @@
                             {% if page == p %}
                     </strong></mark>
                     {% endif %}
-                </a></li>
+            </a></li>
             {% endfor %}
             {% if move_page_back %}
             <li class="page-item"><a class="page-link" href='/?page={{ page+5 }}'><span
