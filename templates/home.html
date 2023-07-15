@@ -25,7 +25,7 @@
                 <!-- 다른 테이블과 가로 길이 맞추기 -->
                 <td scope="col" id="open_shop_li" colspan="1"></td>
                 <td scope="col" id="open_shop_li" colspan="4">영업 중인 술집 검색</td>
-                <td scope="col" id="favorite_shop" colspan="3">나의 즐겨찾기</td>
+                <td scope="col" id="favorite_shop" colspan="4">나의 즐겨찾기</td>
                 <td scope="col" id="open_shop_li" colspan="1"></td>
 
             </tr>
@@ -38,8 +38,9 @@
             <th scope="col" width="80">가게 종류</th>
             <th scope="col" width="120">영업 시간<br>(오늘: {{ today_yoil }})</th>
             <th scope="col" width="150">가게 연락처</th>
+            <th scope="col" width="150">가게 주소</th>
             <th scope="col" width="150">역에서부터의<br>거리</th>
-            <th scope="col" width="150">잘못된 정보<br>신고하기</th>
+            <th scope="col" width="80">잘못된 정보<br>신고하기</th>
         </tr>
 
 
@@ -66,6 +67,7 @@
                 <td>{{ shop['shop_type'] }}</td>
                 <td>{{ shop_time }}</td>
                 <td>{{ shop['shop_contact'] }}</td>
+                <td>{{ shop['shop_address'] }}</td>
                 <td>역에서 거리</td>
                 <td>신고버튼</td>
             </tr>
