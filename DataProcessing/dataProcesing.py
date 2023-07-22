@@ -16,6 +16,9 @@ def processed_data_to_csv(area):
             open_info = line['time_info']
             contact = line['contact']
 
+            if star_rating == null:
+                star_rating = 0.0
+
             open_info_by_day = {'월': {"opening_hours": null, "last_order_time": null},
                                      '화': {"opening_hours": null, "last_order_time": null},
                                      '수': {"opening_hours": null, "last_order_time": null},

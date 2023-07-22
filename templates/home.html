@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +7,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
     <style>
+        body{
+            text-align: center;
+        }
         .cover {
             display: flex;
             justify-content: space-between;
@@ -16,145 +18,155 @@
             color: rgb(33, 168, 18);
             text-decoration: none;
         }
-        td, th, .center {
-            /* 수평 중앙 정렬하기 */
-            text-align: center;
-        }
-        .fl-r {
-            float: right;
-            margin-right: 40px;
-        }
-        .mg-r{
-            margin-right: 10px;
-        }
-        .mg-l {
-            margin-left: 30px;
-        }
-        /* class가 fl-r인 element 밑의 select에 대해 적용된다 */
-        .fl-r select{
-            margin-right: 10px;
-            width: 100px;
-            height: 30px;
-        }
-        input{
-            height: 30px;
-        }
     </style>
 </head>
-<body>
-    <br>
-    <!-- 양 끝 정렬 -->
-    <div class="cover">
-        <div><h6 class="mg-l">오늘은 {{ today_yoil }}요일!</h6></div>
-        <div class="fl-r">
-            <span class="mg-r"><a href="#">로그인</a></span>
-            <span><a href="#">회원가입</a></span>
-        </div>
-    </div>
-    <h1 class="center">심야식당</h1>
-    <div class="fl-r">
-        <form method="get">
-            <select name="area">
-                {% if area %}
-                    <!-- disabled 속성을 제거하여 클릭하지 않아도 계속해서 값을 이것으로 가지도록 함) -->
-                    <option value="{{ area }}" selected hidden>{{ area }}</option>
-                {% else %}
-                    <option value="{{ area }}" selected disabled hidden>지역 선택</option>
-                {% endif %}
-                {% for i in areas %}
-                    <option value="{{ i }}">{{ i }}</option>
-                {% endfor %}
-            </select>
-            <input type="submit" value="이동">
-        </form>
-    </div>
-    <br>
-    <br>
+<body class="d-flex justify-content-center">
     <div>
-        <table class="table table-bordered">
-            <thead>
+        <div class="d-flex justify-content-between mt-5">
+            <p><strong>
+                오늘은 
+                {% if today_yoil in ['금','토','일'] %}
+                    <span class="ingredient" style="color: crimson;">
+                        🔥불타는
+                    </span>
+                {% endif %}
+                {{ today_yoil }}요일~🍻
+            </strong></p>
+            <div class="d-flex justify-content-between"> 
+                <a href="#" class="mx-3">로그인</a>
+                <a href="#">회원가입</a>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start">
+            <p><strong>가보자~!</strong></p>
+        </div>
+        <h1 class="center"><a href="/" style="color: black;">심야식당</a></h1>
+        <form method="get">
+            <div class="d-flex justify-content-end">
+                <!--? 지역 필터 -->
+                <select name="area" class="mx-1" style="width: 100px; height: 30px; margin-top: 4px">
+                    <div>
+                        {% if area %}
+                            <option value="{{ area }}" selected hidden>{{ area }}</option>
+                        {% else %}
+                            <option value="{{ area }}" selected disabled hidden>지역 선택</option>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <option value="">전체</option>
+                        {% for i in areas %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </div>
+                </select>
+                <!-- TODO: multiple 속성 넣기  -->
+                <!--? 타입 필터 -->
+                <select name="type" style="width: 100px; height: 30px; margin-top: 4px">
+                    <div>
+                        {% if type %}
+                            <!-- disabled 속성을 제거하여 클릭하지 않아도 계속해서 값을 이것으로 가지도록 함) -->
+                            <option value="{{ type }}" selected hidden>{{ type }}</option>
+                        {% else %}
+                            <option value="{{ type }}" selected disabled hidden>가게 종류</option>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <option value="">전체</option>
+                        {% for t in types %}
+                            <option value="{{ t }}">{{ t }}</option>
+                        {% endfor %}
+                    </div>
+                </select>
+                <!--? 시간 필터 -->
+                <select name="timefromnow" style="width: 120px; height: 30px; margin-top: 4px">
+                    <div>
+                        {% if timefromnow %}
+                            <option value="{{ timefromnow }}" selected hidden>{{ timefromnow }}시간 이상</option>
+                        {% else %}
+                            <option value="" selected disabled hidden>남은 영업시간</option>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <option value="">전체</option>
+                        {% for t in [[2, '2시간 이상'], [3, '3시간 이상'], [4, '4시간 이상']] %}
+                            <option value="{{ t[0] }}">{{ t[1] }}</option>
+                        {% endfor %}
+                    </div>
+                </select>
+
+                <input type="submit" value="이동" class="btn btn-primary mx-1" >
+            </div>
+        </form>
+        <br>
+        <br>
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col" id="" colspan="1"></th>
+                        <th scope="col" id="open_shop_li" colspan="4">영업 중인 술집 검색</th>
+                        <th scope="col" id="favorite_shop" colspan="3">나의 즐겨찾기</th>
+                        <th scope="col" id="" colspan="1"></th>
+                    </tr>
+                </thead>
                 <tr>
-                    <!-- 다른 테이블과 가로 길이 맞추기 -->
-                    <td scope="col" id="open_shop_li" colspan="1"></td>
-                    <td scope="col" id="open_shop_li" colspan="4">영업 중인 술집 검색</td>
-                    <td scope="col" id="favorite_shop" colspan="4">나의 즐겨찾기</td>
-                    <td scope="col" id="open_shop_li" colspan="1"></td>
-
+                    <th scope="col" width="80">즐겨찾기</th>
+                    <th scope="col" width="110">상점 명</th>
+                    <th scope="col" width="80">별점</th>
+                    <th scope="col" width="80">영업 여부</th>
+                    <th scope="col" width="80">가게 종류</th>
+                    <th scope="col" width="120">영업 시간<br>(오늘: {{ today_yoil }})</th>
+                    <th scope="col" width="150">가게 연락처</th>
+                    <th scope="col" width="150">가게 주소</th>
+                    <th scope="col" width="80">신고</th>
                 </tr>
-            </thead>
-            <tr>
-                <th scope="col" width="80">즐겨찾기</th>
-                <th scope="col" width="110">상점 명</th>
-                <th scope="col" width="80">별점</th>
-                <th scope="col" width="80">영업 여부</th>
-                <th scope="col" width="80">가게 종류</th>
-                <th scope="col" width="120">영업 시간<br>(오늘: {{ today_yoil }})</th>
-                <th scope="col" width="150">가게 연락처</th>
-                <th scope="col" width="150">가게 주소</th>
-                <th scope="col" width="150">역에서부터의<br>거리</th>
-                <th scope="col" width="60">신고</th>
-            </tr>
 
+                <tbody class="table-group-divider">
+                    {% for shop in shopdata %}
+                    <tr>
+                        <td><img src="{{ url_for('static', filename='IMG/star/empty_yellow_star.png') }}" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/{{ shop['name'] }}/place" target="_blank">{{ shop['name'] }}</a></td>
+                        <td>{{ shop['star_rating'] }}</td>
+                        <td>{{ shop['status'] }}</td>
+                        <td>{{ shop['type'] }}</td>
+                        <td>{{ shop[today_yoil + "opening_hours"] }}</td>
+                        <td>{{ shop['contact'] }}</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996,{{ area }} {{ shop['name'] }},1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >{{ shop['address'] }}</a></td>
+                        <td><a style="color: crimson" href="/singo?area={{ area }}&name={{ shop['name'] }}" target="_blank">신고하기</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination" style="justify-content : center;">
+                {% if move_page_front %}
+                <li class="page-item"><a class="page-link" href='/?page={{ 1 }}'><span
+                            aria-hidden="true">&laquo;&laquo;</span></a></li>
+                <li class="page-item"><a class="page-link" href='/?page={{ page-5 }}'><span
+                            aria-hidden="true">&laquo;</span></a></li>
+                {% endif %}
+                {% for p in range(pagination_start, pagination_end+1) %}
 
-            <tbody class="table-group-divider">
-                {% for shop in shopdata %}
-                <tr>
-                    <td><img src="{{ url_for('static', filename='IMG/star/empty_yellow_star.png') }}" alt="star_img" width="20" ></td>
-                    <td><a href="https://map.naver.com/v5/search/{{ shop['name'] }}/place" target="_blank">{{ shop['name'] }}</a></td>
-                    <td>{{ shop['star_rating'] }}</td>
-                    {% set shop_time = shop[today_yoil + "opening_hours"] %}
-                    {% set shop_open_time = shop_time[:2]| int * 100 + shop_time[3:5] | int %}
-                    {% set shop_close_time = shop_time[-5:-3]| int * 100 + shop_time[-2:] | int %}
-                    <td>
-                    {% if shop_time == null%}
-                        {{ null }}
-                    {% elif timenow[0]*100 + timenow[1] < shop_open_time %}
-                        영업 전
-                    {% elif timenow[0]*100 + timenow[1] <= shop_close_time %}
-                        영업 중
-                    {% else %}
-                        영업 종료
-                    {% endif %}
-                    </td>
-                    <td>{{ shop['type'] }}</td>
-                    <td>{{ shop_time }}</td>
-                    <td>{{ shop['contact'] }}</td>
-                    <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996,{{ area }} {{ shop['name'] }},1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >{{ shop['address'] }}</a></td>
-                    <td>없앨까?</td>
-                    <td><a style="color: crimson" href="/singo?area={{ area }}&name={{ shop['name'] }}" target="_blank">신고하기</a></td>
-                </tr>
+                <li class="page-item"><a class="page-link" href='/?page={{ p }}'>
+                        {% if page == p %}
+                        <strong><mark>
+                                {% endif %}
+                                {{ p }}
+                                {% if page == p %}
+                        </strong></mark>
+                        {% endif %}
+                </a></li>
                 {% endfor %}
-            </tbody>
-        </table>
+                {% if move_page_back %}
+                <li class="page-item"><a class="page-link" href='/?page={{ page+5 }}'><span
+                            aria-hidden="true">&raquo;</span></a></li>
+                <li class="page-item"><a class="page-link" href='/?page={{ total_page }}'><span
+                            aria-hidden="true">&raquo;&raquo;</span></a></li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination" style="justify-content : center;">
-            {% if move_page_front %}
-            <li class="page-item"><a class="page-link" href='/?page={{ 1 }}'><span
-                        aria-hidden="true">&laquo;&laquo;</span></a></li>
-            <li class="page-item"><a class="page-link" href='/?page={{ page-5 }}'><span
-                        aria-hidden="true">&laquo;</span></a></li>
-            {% endif %}
-            {% for p in range(pagination_start, pagination_end+1) %}
-
-            <li class="page-item"><a class="page-link" href='/?page={{ p }}'>
-                    {% if page == p %}
-                    <strong><mark>
-                            {% endif %}
-                            {{ p }}
-                            {% if page == p %}
-                    </strong></mark>
-                    {% endif %}
-            </a></li>
-            {% endfor %}
-            {% if move_page_back %}
-            <li class="page-item"><a class="page-link" href='/?page={{ page+5 }}'><span
-                        aria-hidden="true">&raquo;</span></a></li>
-            <li class="page-item"><a class="page-link" href='/?page={{ total_page }}'><span
-                        aria-hidden="true">&raquo;&raquo;</span></a></li>
-            {% endif %}
-        </ul>
-    </nav>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
