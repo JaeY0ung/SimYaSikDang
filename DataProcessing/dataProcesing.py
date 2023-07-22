@@ -1,11 +1,12 @@
 import csv
+from src.area import k_to_e
 
-def processed_data_to_csv(area):
+def processed_data_to_csv(before_file, after_file):
     processed_data = []
     null = "정보 없음"
 
     # csv 파일 불러와서 영업시간 데이터 전처리
-    with open(f'./csv/{area}.csv', 'r', encoding= 'UTF-8') as file:
+    with open(before_file, 'r', encoding= 'UTF-8') as file:
         csvReader = csv.DictReader(file)
         for line in csvReader:
             name = line['name']
@@ -95,10 +96,10 @@ def processed_data_to_csv(area):
             processed_data.append(dict(zip(keys, values)))
 
     # csv 파일에 저장
-    with open(f'./csv/{area}_processed.csv', 'w', encoding= 'UTF-8') as file:
+    with open(after_file, 'w', encoding= 'UTF-8') as file:
             csvWriter = csv.DictWriter(file, fieldnames=keys)
             csvWriter.writeheader()
             for row in processed_data:
                 csvWriter.writerow(row)
                 
-    print(f'./csv/{area}_processed.csv 생성이 완료되었습니다.')
+    print(f'{after_file} 생성이 완료되었습니다.')

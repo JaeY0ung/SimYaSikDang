@@ -1,5 +1,6 @@
 import pandas as pd
 import csv
+import sqlite3
 
 def csv_to_excel(csvfile, xlsxfile):
     csvReader = pd.read_csv(csvfile)
