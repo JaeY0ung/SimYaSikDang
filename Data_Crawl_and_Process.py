@@ -2,11 +2,16 @@ from Crawler.crawler import naver_crawler
 from FileTransform.fileTransform import csv_to_excel
 from DataProcessing.dataProcesing import processed_data_to_csv
 from src.area import areas_dict_ver1, areas_dict_ver2, areas_dict_test, k_to_e
+from datetime import datetime
 
 
 
 # 데이터 크롤링하여 csv파일과 엑셀파일로 저장
 class Data_Crawl_and_Process:
+    def __init__(self):
+        self.today = datetime.today()
+        print(f'오늘 날짜: {self.today.strftime("%Y-%m-%d")}')
+    
     def all(self):
         for gu in areas_dict_test.keys():
             for area in areas_dict_test[gu]:

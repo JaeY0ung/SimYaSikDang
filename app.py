@@ -19,39 +19,28 @@ def time():
 null = '정보 없음'
 types = ['맥주,호프', '술집', '포장마차', '이자카야', '요리주점', '오뎅,꼬치', '전통,민속주점', '와인', '바(BAR)']
 
-areas = []
-for gu in areas_dict_test.keys():
-    for area in areas_dict_test[gu]:
-        areas.append(area)
-
 app = Flask(__name__)
 @app.route('/')
 def home():
     today_yoil = yoil()
     timenow = time()
-    #? default 창
-    shopdata = load_csv("./csv/mangwon_processed.csv")
+    #? default 창: 모든 지역의 데이터 다 가져오기
+    shopdata = []
+    areas = []
+    for gu in areas_dict_test.keys():
+        for area in areas_dict_test[gu]:
+            areas.append(area)
+            try:
+                shopdata.extend(load_csv(f"./csv/{k_to_e[area]}_processed.csv"))
+            except:
+                pass
 
-    page = request.args.get('page', default=1, type=int)
-    search = request.args.get('search', default='', type=str)
-    area = request.args.get('area', default='', type=str)
-    type = request.args.get('type', default='', type=str)
-    timefromnow = request.args.get('timefromnow', default=0, type=int)
+    page        = request.args.get('page',        default= 1, type=int)
+    search      = request.args.get('search',      default='', type=str)
+    area        = request.args.get('area',        default='', type=str)
+    type        = request.args.get('type',        default='', type=str)
+    timefromnow = request.args.get('timefromnow', default= 0, type=int)
 
-    for shop in shopdata:
-        shop_time = shop[today_yoil + "opening_hours"]
-        if shop_time in [null, '휴무']:
-            shop['status'] = null
-        else:
-            shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
-            shop_close_time = int(shop_time[-5:-3]) * 100 + int(shop_time[-2:])
-            timenow_int = timenow[0] * 100 + timenow[1]
-            if timenow_int < shop_open_time:
-                shop['status'] = '영업 전'
-            elif timenow_int <= shop_close_time:
-                shop['status'] = '영업 중'
-            else:
-                shop['status'] = '영업 종료'
     
     if search:
         shopdata = [shop for shop in shopdata if search in shop['name']]
@@ -64,16 +53,33 @@ def home():
         data = []
         for shop in shopdata:
             shop_time = shop[today_yoil + "opening_hours"]
-            print(shop_time)
             if shop_time in [null, '휴무', '정보없음', '정보 없음']:
                 continue
-            shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
+            # shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
             shop_close_time = int(shop_time[-5:-3]) * 100 + int(shop_time[-2:])
             timenow_int = timenow[0] * 100 + timenow[1]
             if timenow_int + timefromnow * 100 <= shop_close_time:
                 data.append(shop)
         shopdata = data
-        print(timenow_int + timefromnow * 100)
+
+    for shop in shopdata:
+        shop_time = shop[today_yoil + "opening_hours"]
+        print(shop_time)
+        if shop_time in [null, '휴무', '정보없음', '정보 없음']:
+            shop['status'] = null
+        else:
+            shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
+            shop_close_time = int(shop_time[-5:-3]) * 100 + int(shop_time[-2:])
+            timenow_int = timenow[0] * 100 + timenow[1]
+            if timenow_int < shop_open_time:
+                shop['status'] = '영업 전'
+            elif timenow_int <= shop_close_time:
+                shop['status'] = '영업 중'
+            else:
+                shop['status'] = '영업 종료'
+            if shop_close_time >= 2400:
+                shop[today_yoil + "opening_hours"] = shop_time + f'\n(~ 오전 {str(int(shop_time[-5:-3])-24)}:{shop_time[-2:]})'
+            
             
     pagemaker = Pagination()
     pagemaker.makepagination(shopdata, page)

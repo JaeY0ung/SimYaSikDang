@@ -3,5 +3,6 @@ __pycache__
 .log
 .json
 .db
-
+.csv
+.xlsx
 requirements.txt

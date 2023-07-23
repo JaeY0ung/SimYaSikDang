@@ -25,7 +25,6 @@ def scroll_down(crawler):
 def naver_crawler(area):
     null = "정보 없음"
     start_time =  time.time()
-    print(f'시작 시간: {start_time}')
     # chrome_crawler 설정
     chrome_options = Options() # 브라우저 꺼짐 방지
     chrome_options.add_experimental_option("detach", True)
@@ -161,7 +160,6 @@ def naver_crawler(area):
             crawl_data.append(dict(zip(values, keys)))
     
     end_time =  time.time()
-    print(f'끝난 시간: {end_time}')
     print(f'크롤링에 걸린 시간: {(int(end_time - start_time)//60)}분 {(int(end_time - start_time))%60}초')
     crawler.quit()
     with open(f'./csv/{k_to_e[area]}.csv', 'w', encoding= 'UTF-8') as file:
