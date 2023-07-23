@@ -41,8 +41,8 @@ def naver_crawler(area):
     crawl_data = []
 
     # 클릭할 페이지: range(1,6)
-    #? 테스트: range(1,3)
-    for page in range(1,3):
+    #? 테스트: range(1,2)
+    for page in range(1,2):
         # default
         crawler.switch_to.default_content()
         # 프레임 이동
@@ -70,34 +70,46 @@ def naver_crawler(area):
             # searchIframe 찾아 들어오기
             searchIframe = crawler.find_element(By.ID, 'searchIframe')
             crawler.switch_to.frame(searchIframe)
+            crawler.implicitly_wait(5)
 
-            # 가게 명
-            name = shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').text
-            crawler.implicitly_wait(2)
+            #? 가게 명
+            try:
+                name = shop.find_element(By.CLASS_NAME, 'place_bluelink.TYaxT').text
+            except:
+                name = null
+            crawler.implicitly_wait(5)
 
-            # 가게 종류
+            #? 가게 종류
             try:
                 type = shop.find_element(By.CLASS_NAME, 'KCMnt').text
             except:
                 type = null
-            crawler.implicitly_wait(2)
+            crawler.implicitly_wait(5)
 
-            # 가게명 클릭하여 세부창 띄우기
+            #? 가게명 클릭하여 세부창 띄우기
             shop.find_element(By.CLASS_NAME, 'N_KDL').click()
-            crawler.implicitly_wait(1)
+            crawler.implicitly_wait(5)
         
-            # frame 밖으로 나가기
+            #? frame 밖으로 나가기
             crawler.switch_to.default_content()
-            # entryIframe 찾아 들어오기
+            #? entryIframe 찾아 들어오기
             entryIframe = crawler.find_element(By.ID, 'entryIframe')
             crawler.switch_to.frame(entryIframe)
-            crawler.implicitly_wait(3)
+            crawler.implicitly_wait(5)
+            time.sleep(2)
+
+            #? 영업시간 펼쳐보기 클릭 먼저 해놓기!
+            try:
+                crawler.find_element(By.CLASS_NAME, 'gKP9i.RMgN0').click()
+            except:
+                print(f'{name}의 영업시간 펼쳐보기 클릭 실패')
 
             #? 가게 별점
             try:
                 star_rating = crawler.find_element(By.CSS_SELECTOR, '#app-root > div > div > div > div.place_section.OP4V8 > div.zD5Nm.f7aZ0 > div.dAsGb > span.PXMot.LXIwF > em').text
             except:
                 star_rating = null
+            crawler.implicitly_wait(5)
 
             #? 방문자리뷰 + 블로그리뷰수
             try:
@@ -107,35 +119,35 @@ def naver_crawler(area):
                     review_sum += int(review.text)
             except:
                 review_sum = null
-            time.sleep(0.5)
+            crawler.implicitly_wait(5)
+            time.sleep(1)
             
             #? 가게 주소
             try:
                 address = crawler.find_element(By.CLASS_NAME, 'LDgIH').text
             except:
                 address = null
-            crawler.implicitly_wait(3)
-            time.sleep(0.3)
-            # TODO: 1.계속해서 펼쳐지기를 못누른 경우도 존재                     -> 2. 위와 아래에 time.sleep(0.3) 넣어줌
-            #!꼭 해결!  <두 페이지 기준> (1,2 페이지)
-            #! 1.역삼:28개, 망원:21개, 연남:26개, 합정:24개, 홍대:31개, 신촌:X  -> 2. 역삼: 개, 망원:개, 연남:개, 합정:개, 홍대:개, 신촌:X
+            crawler.implicitly_wait(5)
+            time.sleep(1)
+                         
             #? 가게 영업시간
             try:
-                crawler.find_element(By.CLASS_NAME, 'gKP9i.RMgN0').click()
-                crawler.implicitly_wait(3)
-                time.sleep(0.3)
                 # 가게 요일별 영업시간
-                elements = crawler.find_elements(By.CLASS_NAME,'w9QyJ')
+                time_crawler = crawler.find_element(By.CLASS_NAME, 'gKP9i.RMgN0')
+
+                elements = time_crawler.find_elements(By.CLASS_NAME,'w9QyJ')
+                                                         
                 days_time_info = [element.text for element in elements]
                 time_info = []
-                for day_time_info in days_time_info:
-                    day_time_info = day_time_info.replace("\n", "=").replace("=접기", "").split('=')
-                    time_info.append(day_time_info)
-                    if '펼쳐보기' in day_time_info:
-                        print(f'펼쳐보기 실패: {name}')
+                for day_info in days_time_info:
+                    day_info = day_info.replace("\n", "=").replace("=접기", "").split('=')
+                    time_info.append(day_info)
+                
+                if len(time_info) == 1:
+                    print(f'{name}의 영업시간 정보 못 가져옴')
             except:
                 time_info = null
-            crawler.implicitly_wait(1)
+            crawler.implicitly_wait(5)
 
             # 가게 연락처
             try:

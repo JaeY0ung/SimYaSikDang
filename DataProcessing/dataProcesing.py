@@ -1,5 +1,4 @@
 import csv
-from src.area import k_to_e
 
 def processed_data_to_csv(before_file, after_file):
     processed_data = []

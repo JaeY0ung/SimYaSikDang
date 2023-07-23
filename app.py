@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from Pagination.pagination import Pagination
 from FileTransform.fileTransform import load_csv
 from datetime import datetime
-import area as area
+from src.area import areas_dict_test, areas_dict_ver1, areas_dict_ver2, k_to_e
 from operator import itemgetter
 
 #? 오늘이 무슨 요일인지 구하는 함수
@@ -17,12 +17,11 @@ def time():
     return now.hour, now.minute
 
 null = '정보 없음'
-areas_dict = area.areas_dict_test
 types = ['맥주,호프', '술집', '포장마차', '이자카야', '요리주점', '오뎅,꼬치', '전통,민속주점', '와인', '바(BAR)']
 
 areas = []
-for gu in areas_dict.keys():
-    for area in areas_dict[gu]:
+for gu in areas_dict_test.keys():
+    for area in areas_dict_test[gu]:
         areas.append(area)
 
 app = Flask(__name__)
@@ -31,7 +30,7 @@ def home():
     today_yoil = yoil()
     timenow = time()
     #? default 창
-    shopdata = load_csv("./csv/망원_processed.csv")
+    shopdata = load_csv("./csv/mangwon_processed.csv")
 
     page = request.args.get('page', default=1, type=int)
     search = request.args.get('search', default='', type=str)
@@ -58,7 +57,7 @@ def home():
         shopdata = [shop for shop in shopdata if search in shop['name']]
     #? 필터 
     if area:
-        shopdata = load_csv(f"./csv/{area}_processed.csv")
+        shopdata = load_csv(f"./csv/{k_to_e[area]}_processed.csv")
     if type:
         shopdata = [shop for shop in shopdata if type == shop['type']]
     if timefromnow:
