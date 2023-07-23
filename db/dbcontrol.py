@@ -18,8 +18,8 @@ class DBcontroller:
     def csv_to_db(self):
         query = '.mode csv' 
         self.cursor.execute(query)
-        for key in areas_dict_test.keys():
-            for area in areas_dict_test[key]:
+        for gu in areas_dict_test.keys():
+            for area in areas_dict_test[gu]:
                 #? 포맷팅 시 ' 써야 하는지.
                 import_query = f'.import ../csv/{k_to_e[area]}_processed.csv {k_to_e[area]}'
                 #? fetchall 해야 하는지
