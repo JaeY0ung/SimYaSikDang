@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>심야식당</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <style>
+        body{
+            text-align: center;
+        }
+        .cover {
+            display: flex;
+            justify-content: space-between;
+        }
+        a {
+            color: rgb(143, 18, 168);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body class="d-flex justify-content-center">
+    <div>
+        <div class="d-flex justify-content-between mt-5">
+            <p><strong>
+                오늘은 
+                
+                    <span class="ingredient" style="color: crimson;">
+                        🔥불타는
+                    </span>
+                
+                일요일~🍻
+            </strong></p>
+            <div class="d-flex justify-content-between"> 
+                <a href="#" class="mx-3">로그인</a>
+                <a href="#">회원가입</a>
+            </div>
+        </div>
+        <div class="d-flex justify-content-start">
+            <p><strong>가보자~!</strong></p>
+        </div>
+        <h1 class="center"><a href="/" style="color: black;">심야식당</a></h1>
+        <form method="get">
+            <div class="d-flex justify-content-end">
+                <!--? 지역 필터 -->
+                
+                    <input type="text" name="search" placeholder="상점명 입력" style="width: 100px; height: 30px; margin-top: 4px">
+                
+                <select name="area" class="mx-1" style="width: 100px; height: 30px; margin-top: 4px">
+                    <div>
+                        
+                            <option value="" selected disabled hidden>지역 선택</option>
+                        
+                    </div>
+                    <div>
+                        <option value="">전체</option>
+                        
+                            <option value="역삼동">역삼동</option>
+                        
+                            <option value="망원">망원</option>
+                        
+                            <option value="연남동">연남동</option>
+                        
+                            <option value="합정">합정</option>
+                        
+                            <option value="홍대">홍대</option>
+                        
+                            <option value="신촌">신촌</option>
+                        
+                            <option value="연희동">연희동</option>
+                        
+                            <option value="일산">일산</option>
+                        
+                    </div>
+                </select>
+                <!-- TODO: multiple 속성 넣기  -->
+                <!--? 타입 필터 -->
+                <select name="type" style="width: 100px; height: 30px; margin-top: 4px">
+                    <div>
+                        
+                            <option value="" selected disabled hidden>가게 종류</option>
+                        
+                    </div>
+                    <div>
+                        <option value="">전체</option>
+                        
+                            <option value="맥주,호프">맥주,호프</option>
+                        
+                            <option value="술집">술집</option>
+                        
+                            <option value="포장마차">포장마차</option>
+                        
+                            <option value="이자카야">이자카야</option>
+                        
+                            <option value="요리주점">요리주점</option>
+                        
+                            <option value="오뎅,꼬치">오뎅,꼬치</option>
+                        
+                            <option value="전통,민속주점">전통,민속주점</option>
+                        
+                            <option value="와인">와인</option>
+                        
+                            <option value="바(BAR)">바(BAR)</option>
+                        
+                    </div>
+                </select>
+                <!--? 시간 필터 -->
+                <select name="timefromnow" style="width: 120px; height: 30px; margin-top: 4px">
+                    <div>
+                        
+                            <option value="" selected disabled hidden>남은 영업시간</option>
+                        
+                    </div>
+                    <div>
+                        <option value="">전체</option>
+                        
+                            <option value="2">2시간 이상</option>
+                        
+                            <option value="3">3시간 이상</option>
+                        
+                            <option value="4">4시간 이상</option>
+                        
+                            <option value="6">6시간 이상</option>
+                        
+                    </div>
+                </select>
+                <input type="submit" value="이동" class="btn btn-primary mx-1" >
+            </div>
+        </form>
+        <br>
+        <br>
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col" id="" colspan="1"></th>
+                        <th scope="col" id="open_shop_li" colspan="4">영업 중인 술집 검색</th>
+                        <th scope="col" id="favorite_shop" colspan="3">나의 즐겨찾기</th>
+                        <th scope="col" id="" colspan="1"></th>
+                    </tr>
+                </thead>
+                <tr>
+                    <th scope="col" width="80">즐겨찾기</th>
+                    <th scope="col" width="110">상점 명</th>
+                    <th scope="col" width="80">별점</th>
+                    <th scope="col" width="80">영업 여부</th>
+                    <th scope="col" width="80">가게 종류</th>
+                    <th scope="col" width="120">영업 시간<br>(오늘: 일)</th>
+                    <th scope="col" width="150">가게 연락처</th>
+                    <th scope="col" width="150">가게 주소</th>
+                    <th scope="col" width="80">신고</th>
+                </tr>
+
+                <tbody class="table-group-divider">
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/위드바틀/place" target="_blank">위드바틀</a></td>
+                        <td>5</td>
+                        <td>영업 종료</td>
+                        <td>와인</td>
+                        <td>14:00-21:00</td>
+                        <td>0507-1459-6040</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 위드바틀,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 월드컵로13길 19-23 2층 201호</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=위드바틀" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/위드바틀/place" target="_blank">위드바틀</a></td>
+                        <td>5</td>
+                        <td>영업 종료</td>
+                        <td>와인</td>
+                        <td>14:00-21:00</td>
+                        <td>0507-1459-6040</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 위드바틀,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 월드컵로13길 19-23 2층 201호</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=위드바틀" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/수을관/place" target="_blank">수을관</a></td>
+                        <td>5</td>
+                        <td>영업 중</td>
+                        <td>요리주점</td>
+                        <td>17:00-25:00
+(~ 오전 1:00)</td>
+                        <td>0507-1375-0207</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 수을관,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 동교로38길 19 2.5층</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=수을관" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/에이든/place" target="_blank">에이든</a></td>
+                        <td>5</td>
+                        <td>영업 중</td>
+                        <td>와인</td>
+                        <td>15:00-24:00
+(~ 오전 0:00)</td>
+                        <td>0507-1399-1725</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 에이든,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 동교로38길 16 1층</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=에이든" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/명월문샤인/place" target="_blank">명월문샤인</a></td>
+                        <td>5</td>
+                        <td>영업 중</td>
+                        <td>바(BAR)</td>
+                        <td>18:00-24:00
+(~ 오전 0:00)</td>
+                        <td>0507-1481-1661</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 명월문샤인,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 독막로6길 18 1층</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=명월문샤인" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/명월문샤인/place" target="_blank">명월문샤인</a></td>
+                        <td>5</td>
+                        <td>영업 중</td>
+                        <td>바(BAR)</td>
+                        <td>18:00-24:00
+(~ 오전 0:00)</td>
+                        <td>0507-1481-1661</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 명월문샤인,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 독막로6길 18 1층</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=명월문샤인" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/화담/place" target="_blank">화담</a></td>
+                        <td>5</td>
+                        <td>영업 중</td>
+                        <td>요리주점</td>
+                        <td>16:30-25:00
+(~ 오전 1:00)</td>
+                        <td>0507-1325-2822</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 화담,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 와우산로29바길 11-3 1층 화담</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=화담" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/다트펍 신촌상회/place" target="_blank">다트펍 신촌상회</a></td>
+                        <td>5</td>
+                        <td>영업 중</td>
+                        <td>맥주,호프</td>
+                        <td>18:00-26:00
+(~ 오전 2:00)</td>
+                        <td>010-9404-1703</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 다트펍 신촌상회,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 서대문구 연세로7길 18 아주빌딩 3층</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=다트펍 신촌상회" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/화담/place" target="_blank">화담</a></td>
+                        <td>5</td>
+                        <td>영업 중</td>
+                        <td>요리주점</td>
+                        <td>16:30-25:00
+(~ 오전 1:00)</td>
+                        <td>0507-1325-2822</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 화담,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 와우산로29바길 11-3 1층 화담</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=화담" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/초쿤바/place" target="_blank">초쿤바</a></td>
+                        <td>4.99</td>
+                        <td>영업 중</td>
+                        <td>바(BAR)</td>
+                        <td>18:00-25:00
+(~ 오전 1:00)</td>
+                        <td>0507-1494-7017</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 초쿤바,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 망원로6길 49 2층</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=초쿤바" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/잔상/place" target="_blank">잔상</a></td>
+                        <td>4.99</td>
+                        <td>영업 중</td>
+                        <td>와인</td>
+                        <td>14:00-24:00
+(~ 오전 0:00)</td>
+                        <td>0507-1387-5457</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 잔상,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 동교로38길 33-10 1층</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=잔상" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                    <tr>
+                        <td><img src="/static/IMG/star/empty_yellow_star.png" alt="star_img" width="20" ></td>
+                        <td><a href="https://map.naver.com/v5/search/윤달/place" target="_blank">윤달</a></td>
+                        <td>4.97</td>
+                        <td>영업 중</td>
+                        <td>요리주점</td>
+                        <td>17:00-25:00
+(~ 오전 1:00)</td>
+                        <td>0507-1362-6725</td>
+                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996, 윤달,1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >서울 마포구 동교로 262-3 지하 1층 윤달</a></td>
+                        <td><a style="color: crimson" href="/singo?area=&name=윤달" target="_blank">신고하기</a></td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination" style="justify-content : center;">
+                
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=1'>
+                        
+                            <strong><mark>
+                                
+                                1
+                                
+                            </strong></mark>
+                        
+                    </a></li>
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=2'>
+                        
+                                2
+                                
+                    </a></li>
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=3'>
+                        
+                                3
+                                
+                    </a></li>
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=4'>
+                        
+                                4
+                                
+                    </a></li>
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=5'>
+                        
+                                5
+                                
+                    </a></li>
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=6'>
+                        
+                                6
+                                
+                    </a></li>
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=7'>
+                        
+                                7
+                                
+                    </a></li>
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=8'>
+                        
+                                8
+                                
+                    </a></li>
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=9'>
+                        
+                                9
+                                
+                    </a></li>
+                
+                
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=6'><span aria-hidden="true">&raquo;</span></a></li>
+                    <li class="page-item"><a class="page-link" href='/?search=&area=&type=&timefromnow=0&page=151'><span aria-hidden="true">&raquo;&raquo;</span></a></li>
+                
+            </ul>
+        </nav>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+</body>
+</html>

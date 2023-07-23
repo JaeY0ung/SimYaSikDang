@@ -5,6 +5,7 @@ from datetime import datetime
 from src.area import areas_dict_test, areas_dict_ver1, areas_dict_ver2, k_to_e
 from operator import itemgetter
 
+
 #? 오늘이 무슨 요일인지 구하는 함수
 def yoil():
     today = datetime.today().weekday()
