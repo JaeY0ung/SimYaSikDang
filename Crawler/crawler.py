@@ -24,7 +24,8 @@ def scroll_down(crawler):
 # 내 방 네트워크 환경에서 맥북 에어를 이용하여 합정 5페이지 크롤링에 걸린 시간: 12분
 def naver_crawler(area):
     null = "정보 없음"
-
+    start_time =  time.time()
+    print(f'시작 시간: {start_time}')
     # chrome_crawler 설정
     chrome_options = Options() # 브라우저 꺼짐 방지
     chrome_options.add_experimental_option("detach", True)
@@ -40,9 +41,9 @@ def naver_crawler(area):
     # 크롤링한 상점들의 정보를 담는 리스트
     crawl_data = []
 
-    # 클릭할 페이지: range(1,6)
+    #? 실제 클릭할 페이지: range(1,6)
     #? 테스트: range(1,2)
-    for page in range(1,2):
+    for page in range(1,6):
         # default
         crawler.switch_to.default_content()
         # 프레임 이동
@@ -128,7 +129,7 @@ def naver_crawler(area):
             except:
                 address = null
             crawler.implicitly_wait(5)
-            time.sleep(1)
+            # time.sleep(1)
                          
             #? 가게 영업시간
             try:
@@ -158,10 +159,11 @@ def naver_crawler(area):
             values = ['name', 'type', 'star_rating', 'review_sum', 'address', 'time_info', 'contact']
             keys = [name, type, star_rating, review_sum, address, time_info, contact]
             crawl_data.append(dict(zip(values, keys)))
-            # print(f"{name} 영업시간: {time_info}")
     
+    end_time =  time.time()
+    print(f'끝난 시간: {end_time}')
+    print(f'크롤링에 걸린 시간: {(int(end_time - start_time)//60)}분 {(int(end_time - start_time))%60}초')
     crawler.quit()
-
     with open(f'./csv/{k_to_e[area]}.csv', 'w', encoding= 'UTF-8') as file:
         csvWriter = csv.DictWriter(file, fieldnames=values)
         csvWriter.writeheader()
