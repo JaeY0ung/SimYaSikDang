@@ -2,8 +2,8 @@
 __pycache__
 .log
 .json
-requirements.txt
 .pyc
 .db
+# requirements.txt
 # .csv
 # .xlsx
