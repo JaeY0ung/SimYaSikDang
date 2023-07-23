@@ -88,7 +88,7 @@ def home():
     #? 얘보다 좀 더 빠름 <- shopdata = sorted(shopdata, key = lambda x: x['star_rating'], reverse=True)
     shopdata = sorted(shopdata, key= itemgetter('star_rating'), reverse=True)
 
-    return render_template("home.html", today_yoil = today_yoil, timenow = timenow, null = null,
+    return render_template("index.html", today_yoil = today_yoil, timenow = timenow, null = null,
                            areas=areas, types = types, search = search, area=area, type = type, timefromnow = timefromnow, 
                            shopdata = shopdata[pagemaker.start_index : pagemaker.end_index + 1],
                            page = page, total_page = pagemaker.total_page, 
