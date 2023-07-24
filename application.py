@@ -20,21 +20,11 @@ def time():
 null = '정보 없음'
 types = ['맥주,호프', '술집', '포장마차', '이자카야', '요리주점', '오뎅,꼬치', '전통,민속주점', '와인', '바(BAR)']
 
-app = Flask(__name__)
-@app.route('/')
+application = Flask(__name__)
+@application.route('/')
 def home():
     today_yoil = yoil()
     timenow = time()
-    #? default 창: 모든 지역의 데이터 다 가져오기
-    shopdata = []
-    areas = []
-    for gu in areas_dict_test.keys():
-        for area in areas_dict_test[gu]:
-            areas.append(area)
-            try:
-                shopdata.extend(load_csv(f"./csv/{k_to_e[area]}_processed.csv"))
-            except:
-                pass
 
     page        = request.args.get('page',        default= 1, type=int)
     search      = request.args.get('search',      default='', type=str)
@@ -42,12 +32,24 @@ def home():
     type        = request.args.get('type',        default='', type=str)
     timefromnow = request.args.get('timefromnow', default= 0, type=int)
 
-    
+    #? default 창: 모든 지역의 데이터 다 가져오기
+    areas = [] #? index.html option으로 사용
+    for gu in areas_dict_test.keys():
+        for dong in areas_dict_test[gu]:
+            areas.append(dong)
+
+    if area:
+        shopdata = load_csv(f"./csv/{k_to_e[area]}_processed.csv")
+
+    if not area:
+        shopdata = []
+        for gu in areas_dict_test.keys():
+            for dong in areas_dict_test[gu]:
+                shopdata.extend(load_csv(f"./csv/{k_to_e[dong]}_processed.csv"))
+
     if search:
         shopdata = [shop for shop in shopdata if search in shop['name']]
     #? 필터 
-    if area:
-        shopdata = load_csv(f"./csv/{k_to_e[area]}_processed.csv")
     if type:
         shopdata = [shop for shop in shopdata if type == shop['type']]
     if timefromnow:
@@ -99,9 +101,16 @@ def home():
                            move_page_back = pagemaker.move_page_back)
 
 
-@app.route('/')
+@application.route('/')
 def login():
     pass
 
+@application.route('/singo')
+def singo():
+    area = request.args.get('area', default='', type=str)
+    name = request.args.get('name', default='', type=str)
+    return render_template('singo.html', area = area, name = name)
+
 if __name__ == '__main__':
-    app.run()
+    application.debug = True
+    application.run(host="0.0.0.0", port=8888)

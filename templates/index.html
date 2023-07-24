@@ -19,6 +19,24 @@
             text-decoration: none;
         }
     </style>
+    <!--! TODO : fontawesome으로 바꾸기 -->
+    <!--! TODO : button.addEventListener('click', ()=>{}) 공부하기 -->
+    <script>
+        let favorite_change = () => {
+            var list = document.querySelectorAll('.favorite')
+            list.forEach((button)=>{
+                button.addEventListener('click', ()=>{
+                    if (srcnow == "http://127.0.0.1:8888/static/IMG/star/empty_yellow_star.png"){
+                        alert('찜 목록에 추가되었습니다.');
+                        document.getElementById("favorite_2").src = "./static/IMG/star/full_yellow_star.png";
+                    }else{
+                        alert('찜 목록에서 제거되었습니다.');
+                        document.getElementById("favorite_2").src = "./static/IMG/star/empty_yellow_star.png";
+                   }
+                })
+            })
+        }
+    </script>
 </head>
 <body class="d-flex justify-content-center">
     <div>
@@ -54,7 +72,7 @@
                         {% if area %}
                             <option value="{{ area }}" selected hidden>{{ area }}</option>
                         {% else %}
-                            <option value="{{ area }}" selected disabled hidden>지역 선택</option>
+                            <option value="" selected disabled hidden>지역 선택</option>
                         {% endif %}
                     </div>
                     <div>
@@ -126,18 +144,19 @@
                 </tr>
 
                 <tbody class="table-group-divider">
-                    {% for shop in shopdata %}
-                    <tr>
-                        <td><img src="{{ url_for('static', filename='IMG/star/empty_yellow_star.png') }}" alt="star_img" width="20" ></td>
-                        <td><a href="https://map.naver.com/v5/search/{{ shop['name'] }}/place" target="_blank">{{ shop['name'] }}</a></td>
-                        <td>{{ shop['star_rating'] }}</td>
-                        <td>{{ shop['status'] }}</td>
-                        <td>{{ shop['type'] }}</td>
-                        <td>{{ shop[today_yoil + "opening_hours"] }}</td>
-                        <td>{{ shop['contact'] }}</td>
-                        <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996,{{ area }} {{ shop['name'] }},1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >{{ shop['address'] }}</a></td>
-                        <td><a style="color: crimson" href="/singo?area={{ area }}&name={{ shop['name'] }}" target="_blank">신고하기</a></td>
-                    </tr>
+                    {% for i in range(shopdata | length) %}
+                    {% set shop = shopdata[i] %}
+                        <tr>
+                            <td><img class="favorite" id="favorite_{{ i }}" src="./static/IMG/star/empty_yellow_star.png" alt="star_img_{{ i }}" width="20" style="cursor: pointer;"></td>
+                            <td><a href="https://map.naver.com/v5/search/{{ shop['name'] }}/place" target="_blank">{{ shop['name'] }}</a></td>
+                            <td>{{ shop['star_rating'] }}</td>
+                            <td>{{ shop['status'] }}</td>
+                            <td>{{ shop['type'] }}</td>
+                            <td>{{ shop[today_yoil + "opening_hours"] }}</td>
+                            <td>{{ shop['contact'] }}</td>
+                            <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996,{{ area }} {{ shop['name'] }},1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >{{ shop['address'] }}</a></td>
+                            <td><a style="color: crimson" href="/singo?area={{ area }}&name={{ shop['name'] }}" target="_blank">신고하기</a></td>
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
