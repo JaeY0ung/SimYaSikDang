@@ -3,7 +3,10 @@ import math
 # 입력값: 데이터(list), 현재페이지, 한페이지에 보일 데이터수, pagination에 보일 페이지 수(홀수)
 # 출력값: start_index, end_index, pagination_start, pagination_end, move_page_front, move_page_back
 class Pagination:
-    def makepagination(self, data, page, data_per_page=12, page_per_pagination=9):
+    def __init__(self, data, page):
+        self.makepagination(data, page, data_per_page=12, page_per_pagination=9)
+
+    def makepagination(self, data, page, data_per_page, page_per_pagination):
         num_data = len(data) # data에 있는 정보의 개수
         total_page = math.ceil(num_data / data_per_page) # 전체 페이지 개수
 

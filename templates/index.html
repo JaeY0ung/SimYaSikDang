@@ -32,10 +32,7 @@
                 {% endif %}
                 {{ today_yoil }}요일~🍻
             </strong></p>
-            <div class="d-flex justify-content-between"> 
-                <a href="#" class="mx-3">로그인</a>
-                <a href="#">회원가입</a>
-            </div>
+            {% include 'login_register.html' %}
         </div>
         <div class="d-flex justify-content-start">
             <p><strong>가보자~!</strong></p>
@@ -171,13 +168,12 @@
         integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
         crossorigin="anonymous"></script>
     <script>
-        <!--! TODO : fontawesome으로 바꾸기 -->
         const stars = document.querySelectorAll('.star')
         stars.forEach((star)=>{
             star.addEventListener('click',(e)=>{
-                if (star.src == 'http://192.168.100.70:8888/static/IMG/star/empty_yellow_star.png'){
+                if(star.src == 'http://192.168.100.70:8888/static/IMG/star/empty_yellow_star.png'){
                     star.setAttribute('src','./static/IMG/star/full_yellow_star.png');
-                }else {
+                }else{
                     star.setAttribute('src','./static/IMG/star/empty_yellow_star.png');
                 }
             })

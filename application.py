@@ -83,9 +83,7 @@ def home():
             if shop_close_time >= 2400:
                 shop[today_yoil + "opening_hours"] = shop_time + f'\n(~ 오전 {str(int(shop_time[-5:-3])-24)}:{shop_time[-2:]})'
             
-            
-    pagemaker = Pagination()
-    pagemaker.makepagination(shopdata, page)
+    pagemaker = Pagination(shopdata, page)
     
     #? 기본 정렬: 별점 순
     #? 얘보다 좀 더 빠름 <- shopdata = sorted(shopdata, key = lambda x: x['star_rating'], reverse=True)
@@ -101,9 +99,9 @@ def home():
                            move_page_back = pagemaker.move_page_back)
 
 
-@application.route('/')
+@application.route('/login')
 def login():
-    pass
+    return render_template('login.html')
 
 @application.route('/singo')
 def singo():
