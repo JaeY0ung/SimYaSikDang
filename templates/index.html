@@ -103,9 +103,10 @@
                     <th scope="col" width="80">즐겨찾기</th>
                     <th scope="col" width="110">상점 명</th>
                     <th scope="col" width="80">별점</th>
+                    <th scope="col" width="80">리뷰수</th>
                     <th scope="col" width="80">영업 여부</th>
                     <th scope="col" width="80">가게 종류</th>
-                    <th scope="col" width="120">영업 시간<br>(오늘: {{ today_yoil }})</th>
+                    <th scope="col" width="120">영업 시간<br>(오늘: {{ today_yoil_kor }})</th>
                     <th scope="col" width="150">가게 연락처</th>
                     <th scope="col" width="150">가게 주소</th>
                     <th scope="col" width="80">신고</th>
@@ -118,9 +119,10 @@
                             <td><img class="star" id="star_{{ i }}" src="./static/IMG/star/empty_yellow_star.png" alt="star_{{ i }}" width="20" style="cursor: pointer;"></td>
                             <td><a href="https://map.naver.com/v5/search/{{ shop['name'] }}/place" target="_blank">{{ shop['name'] }}</a></td>
                             <td>{{ shop['star_rating'] }}</td>
+                            <td>{{ shop['review_sum'] }}</td>
                             <td>{{ shop['status'] }}</td>
                             <td>{{ shop['type'] }}</td>
-                            <td>{{ shop[today_yoil + "opening_hours"] }}</td>
+                            <td>{{ shop[today_yoil_eng + "_opening_hours"] }}</td>
                             <td>{{ shop['contact'] }}</td>
                             <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996,{{ area }} {{ shop['name'] }},1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >{{ shop['address'] }}</a></td>
                             <td><a style="color: crimson" href="/singo?area={{ area }}&name={{ shop['name'] }}" target="_blank">신고하기</a></td>

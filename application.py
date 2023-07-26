@@ -10,8 +10,9 @@ from operator import itemgetter
 #? 오늘이 무슨 요일인지 구하는 함수
 def yoil():
     today = datetime.today().weekday()
-    yoil_arr = ['월','화','수','목','금','토','일']
-    return yoil_arr[today]
+    yoil_arr_k = ['월','화','수','목','금','토','일']
+    yoil_arr_e = ['mon','tue','wed','thur','fri','sat','sun']
+    return yoil_arr_k[today], yoil_arr_e[today]
 
 #? 지금이 몇신지 구하는 함수 (ex. 18:30)
 def time():
@@ -24,7 +25,8 @@ types = ['맥주,호프', '술집', '포장마차', '이자카야', '요리주�
 application = Flask(__name__)
 @application.route('/')
 def home():
-    today_yoil = yoil()
+    today_yoil_kor = yoil()[0]
+    today_yoil_eng = yoil()[1]
     timenow = time()
 
     page        = request.args.get('page',        default= 1, type=int)
@@ -56,7 +58,7 @@ def home():
     if timefromnow:
         data = []
         for shop in shopdata:
-            shop_time = shop[today_yoil + "opening_hours"]
+            shop_time = shop[today_yoil_eng + "opening_hours"]
             if shop_time in [null, '휴무', '정보없음', '정보 없음']:
                 continue
             # shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
@@ -67,7 +69,7 @@ def home():
         shopdata = data
 
     for shop in shopdata:
-        shop_time = shop[today_yoil + "opening_hours"]
+        shop_time = shop[today_yoil_eng + "_opening_hours"]
         print(shop_time)
         if shop_time in [null, '휴무', '정보없음', '정보 없음']:
             shop['status'] = null
@@ -82,7 +84,7 @@ def home():
             else:
                 shop['status'] = '영업 종료'
             if shop_close_time >= 2400:
-                shop[today_yoil + "opening_hours"] = shop_time + f'\n(~ 오전 {str(int(shop_time[-5:-3])-24)}:{shop_time[-2:]})'
+                shop[today_yoil_eng + "opening_hours"] = shop_time + f'\n(~ 오전 {str(int(shop_time[-5:-3])-24)}:{shop_time[-2:]})'
             
     pagemaker = Pagination(shopdata, page)
     
@@ -90,7 +92,7 @@ def home():
     #? 얘보다 좀 더 빠름 <- shopdata = sorted(shopdata, key = lambda x: x['star_rating'], reverse=True)
     shopdata = sorted(shopdata, key= itemgetter('star_rating'), reverse=True)
 
-    return render_template("index.html", today_yoil = today_yoil, timenow = timenow, null = null,
+    return render_template("index.html", today_yoil_eng = today_yoil_eng, today_yoil_kor = today_yoil_kor, timenow = timenow, null = null,
                            areas=areas, types = types, search = search, area=area, type = type, timefromnow = timefromnow, 
                            shopdata = shopdata[pagemaker.start_index : pagemaker.end_index + 1],
                            page = page, total_page = pagemaker.total_page, 
