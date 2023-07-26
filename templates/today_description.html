@@ -1,0 +1,14 @@
+<div>
+    <div class="align-self-center"><p><strong>
+        오늘은 
+        {% if today_yoil in ['수','금','토','일'] %}
+            <span class="ingredient" style="color: crimson;">
+                🔥불타는
+            </span>
+        {% endif %}
+        {{ today_yoil }}요일~🍻
+    </strong></p></div>
+    <div class="d-flex justify-content-start">
+        <p><strong>가보자~!</strong></p>
+    </div>
+</div>

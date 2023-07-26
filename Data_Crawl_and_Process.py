@@ -23,7 +23,7 @@ class Data_Crawl_and_Process:
                     print(f'{area} 크롤링 실패')
             
                 try:
-                    processed_data_to_csv(f'./csv/{k_to_e[area]}.csv', f'./csv/{k_to_e[area]}_processed.csv')
+                    processed_data_to_csv(k_to_e[area], f'./csv/{k_to_e[area]}.csv', f'./csv/{k_to_e[area]}_processed.csv')
                     csv_to_excel(f"./csv/{k_to_e[area]}_processed.csv", f"./excel/{k_to_e[area]}_processed.xlsx")
                     print(f'{area} 데이터처리 성공')
                 except:
@@ -39,7 +39,7 @@ class Data_Crawl_and_Process:
             print(f'{area} 크롤링 실패')
     
         try:
-            processed_data_to_csv(f'./csv/{k_to_e[area]}.csv', f'./csv/{k_to_e[area]}_processed.csv')
+            processed_data_to_csv(k_to_e[area], f'./csv/{k_to_e[area]}.csv', f'./csv/{k_to_e[area]}_processed.csv')
             csv_to_excel(f"./csv/{k_to_e[area]}_processed.csv", f"./excel/{k_to_e[area]}_processed.xlsx")
             print(f'{area} 데이터처리 성공')
         except:

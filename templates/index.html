@@ -15,7 +15,7 @@
             justify-content: space-between;
         }
         a {
-            color: rgb(143, 18, 168);
+            color: rgb(26, 118, 176);
             text-decoration: none;
         }
     </style>
@@ -23,21 +23,11 @@
 <body class="d-flex justify-content-center">
     <div>
         <div class="d-flex justify-content-between mt-5">
-            <p><strong>
-                오늘은 
-                {% if today_yoil in ['금','토','일'] %}
-                    <span class="ingredient" style="color: crimson;">
-                        🔥불타는
-                    </span>
-                {% endif %}
-                {{ today_yoil }}요일~🍻
-            </strong></p>
+            {% include 'today_description.html' %}
             {% include 'login_register.html' %}
         </div>
-        <div class="d-flex justify-content-start">
-            <p><strong>가보자~!</strong></p>
-        </div>
         <h1 class="center"><a href="/" style="color: black;">심야식당</a></h1>
+        <br>
         <form method="get">
             <div class="d-flex justify-content-end">
                 <!--? 지역 필터 -->
@@ -98,7 +88,6 @@
                 <input type="submit" value="이동" class="btn btn-primary mx-1" >
             </div>
         </form>
-        <br>
         <br>
         <div>
             <table class="table table-bordered">

@@ -1,9 +1,10 @@
 import csv
+from datetime import datetime
 
-def processed_data_to_csv(before_file, after_file):
+def processed_data_to_csv(area_English, before_file, after_file):
     processed_data = []
     null = "정보 없음"
-
+    create_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     # csv 파일 불러와서 영업시간 데이터 전처리
     with open(before_file, 'r', encoding= 'UTF-8') as file:
         csvReader = csv.DictReader(file)
@@ -73,17 +74,17 @@ def processed_data_to_csv(before_file, after_file):
                 except:
                     pass
                                 
-            keys = ['name', 'type', 'star_rating', 'review_sum', 'address', 
-                    '월opening_hours', '월last_order_time',
-                    '화opening_hours', '화last_order_time',
-                    '수opening_hours', '수last_order_time',
-                    '목opening_hours', '목last_order_time',
-                    '금opening_hours', '금last_order_time',
-                    '토opening_hours', '토last_order_time',
-                    '일opening_hours', '일last_order_time',
+            keys = ['create_time', 'area', 'name', 'type', 'star_rating', 'review_sum', 'address', 
+                    'mon_opening_hours', 'mon_last_order_time',
+                    'tue_opening_hours', 'tue_last_order_time',
+                    'wed_opening_hours', 'wed_last_order_time',
+                    'thu_opening_hours', 'thu_last_order_time',
+                    'fri_opening_hours', 'fri_last_order_time',
+                    'sat_opening_hours', 'sat_last_order_time',
+                    'sun_opening_hours', 'sun_last_order_time',
                     'contact']
             
-            values = [name, type, star_rating, review_sum, address, 
+            values = [create_time, area_English, name, type, star_rating, review_sum, address, 
                       open_info_by_day['월']['opening_hours'], open_info_by_day['월']['last_order_time'],
                       open_info_by_day['화']['opening_hours'], open_info_by_day['화']['last_order_time'],
                       open_info_by_day['수']['opening_hours'], open_info_by_day['수']['last_order_time'],
