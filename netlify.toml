@@ -1,8 +1,0 @@
-[build]
-  command = "python app.py"
-  publish = "./app.py"
-
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200

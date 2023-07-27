@@ -4,6 +4,10 @@ __pycache__
 .json
 .pyc
 .db
-# requirements.txt
-# .csv
-# .xlsx
+
+requirements.txt
+.csv
+.xlsx
+
+/114
+/Crawler

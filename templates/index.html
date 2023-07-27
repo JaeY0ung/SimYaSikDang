@@ -23,8 +23,12 @@
 <body class="d-flex justify-content-center">
     <div>
         <div class="d-flex justify-content-between mt-5">
-            {% include 'today_description.html' %}
-            {% include 'login_register.html' %}
+            {% include 'today_description_div.html' %}
+            {% if current_user.is_authenticated %}
+                {% include 'logout_div.html' %}
+            {% else %}
+                {% include 'login_register_div.html' %}
+            {% endif %}
         </div>
         <h1 class="center"><a href="/" style="color: black;">심야식당</a></h1>
         <br>
@@ -162,6 +166,7 @@
         const stars = document.querySelectorAll('.star')
         stars.forEach((star)=>{
             star.addEventListener('click',(e)=>{
+                console.log(star.src)
                 if(star.src == 'http://192.168.100.70:8888/static/IMG/star/empty_yellow_star.png'){
                     star.setAttribute('src','./static/IMG/star/full_yellow_star.png');
                 }else{
