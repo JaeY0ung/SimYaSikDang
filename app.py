@@ -8,6 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from utils import SECRET_KEY
 
 #? 오늘이 무슨 요일인지 구하는 함수
 def yoil():
@@ -23,7 +24,7 @@ def time():
 
 app = Flask(__name__)
 
-app.config['SECRET_KEY'] = "simyasikdang"
+app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///simyasikdang.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.debug = True
@@ -34,23 +35,30 @@ login_manager = LoginManager(app)  # 로그인 매니저 생성
 login_manager.login_view = "login" # 로그인 페이지 URI 명시
 
 class User(UserMixin, db.Model):
-    id            = db.Column(db.Integer    , primary_key = True)
-    userid        = db.Column(db.String(80) , unique = True     , nullable = False)
+    id            = db.Column(db.Integer   , primary_key = True)
+    userid        = db.Column(db.String(80), unique = True     , nullable = False)
     password_hash = db.Column(db.String(120)                    , nullable = False)
-    email         = db.Column(db.String(80) , unique = True     , nullable = True)
+    email         = db.Column(db.String(80), unique = True     , nullable = True)
+    User_R = db.relationship('UserLike')
     
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+    
+class UserLike(db.Model):
+    id            = db.Column(db.Integer    , primary_key = True)
+    userid        = db.Column(db.String(64) , db.ForeignKey('user.id'))
+    restaurantid  = db.Column(db.String(64) , db.ForeignKey('restaurants.id'))
+    likesdate     = db.Column(db.String(64) , nullable = True)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
 class Restaurants(db.Model):
-    id                   = db.Column(db.Integer()  , primary_key = True)
+    id                   = db.Column(db.Integer, primary_key = True)
     create_time          = db.Column(db.String(64))
     area                 = db.Column(db.String(64))
     name                 = db.Column(db.String(64))
@@ -73,6 +81,7 @@ class Restaurants(db.Model):
     sun_opening_hours    = db.Column(db.String(64))
     sun_last_order_time  = db.Column(db.String(64))
     contact              = db.Column(db.String(64))
+    restaurants_R = db.relationship('UserLike')
 
     def __repr__(self):
         return f'<Restaurants {self.area}, {self.name}, {self.type}, {self.star_rating}, {self.review_sum}, {self.contact}>'
@@ -135,7 +144,7 @@ def home():
     if timefromnow:
         data = []
         for shop in shopdata:
-            shop_time = shop[today_yoil_eng + "opening_hours"]
+            shop_time = shop[today_yoil_eng + "_opening_hours"]
             if shop_time in [null, '휴무', '정보없음', '정보 없음']:
                 continue
             # shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
@@ -146,7 +155,7 @@ def home():
         shopdata = data
 
     for shop in shopdata:
-        shop_time = shop[today_yoil_eng + "_opening_hours"]
+        shop_time = shop[f"{today_yoil_eng}_opening_hours"]
         
         if shop_time in [null, '휴무', '정보없음', '정보 없음']:
             shop['status'] = null
@@ -162,7 +171,7 @@ def home():
                 shop['status'] = '영업 종료'
 
             if shop_close_time >= 2400:
-                shop[today_yoil_eng + "opening_hours"] = shop_time + f'\n(~ 오전 {str(int(shop_time[-5:-3])-24)}:{shop_time[-2:]})'
+                shop[f"{today_yoil_eng}_opening_hours"] = shop_time + f'\n(~ 오전 {str(int(shop_time[-5:-3])-24)}:{shop_time[-2:]})'
             
     pagemaker = Pagination(shopdata, page)
     
@@ -194,8 +203,8 @@ def register():
 
         email = request.form["email"]
 
-        existing_user_by_userid    = User.query.filter_by(userid=userid).first()
-        existing_user_by_email = User.query.filter_by(email=email).first()
+        existing_user_by_userid = User.query.filter_by(userid=userid).first()
+        existing_user_by_email  = User.query.filter_by(email=email).first()
         if existing_user_by_userid:
             print('이미 있는 아이디입니다.')
             return redirect(url_for('register'))
