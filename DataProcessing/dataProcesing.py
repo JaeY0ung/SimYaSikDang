@@ -1,9 +1,10 @@
 import csv
 from datetime import datetime
+from constant import area_k_to_e, NULL
 
-def processed_data_to_csv(area_English, before_file, after_file):
+def processed_data_to_csv(area_kor, before_file, after_file):
     processed_data = []
-    null = "정보 없음"
+    area_English = area_k_to_e[area_kor]
     create_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     # csv 파일 불러와서 영업시간 데이터 전처리
     with open(before_file, 'r', encoding= 'UTF-8') as file:
@@ -17,16 +18,16 @@ def processed_data_to_csv(area_English, before_file, after_file):
             open_info = line['time_info']
             contact = line['contact']
 
-            if star_rating == null:
+            if star_rating == NULL:
                 star_rating = 0.0
 
-            open_info_by_day = {'월': {"opening_hours": null, "last_order_time": null},
-                                     '화': {"opening_hours": null, "last_order_time": null},
-                                     '수': {"opening_hours": null, "last_order_time": null},
-                                     '목': {"opening_hours": null, "last_order_time": null},
-                                     '금': {"opening_hours": null, "last_order_time": null},
-                                     '토': {"opening_hours": null, "last_order_time": null},
-                                     '일': {"opening_hours": null, "last_order_time": null} }
+            open_info_by_day = {'월': {"opening_hours": NULL, "last_order_time": NULL},
+                                     '화': {"opening_hours": NULL, "last_order_time": NULL},
+                                     '수': {"opening_hours": NULL, "last_order_time": NULL},
+                                     '목': {"opening_hours": NULL, "last_order_time": NULL},
+                                     '금': {"opening_hours": NULL, "last_order_time": NULL},
+                                     '토': {"opening_hours": NULL, "last_order_time": NULL},
+                                     '일': {"opening_hours": NULL, "last_order_time": NULL} }
             open_info = open_info.replace("'", "").strip('[[').strip(']]').split('], [')
             
             for day in open_info[1:]: # 0번째는 현재 영업중 정보
@@ -34,11 +35,11 @@ def processed_data_to_csv(area_English, before_file, after_file):
                 if len(day) >= 3:
                     yoil, time_info, day_last_order = day[0], day[1], day[2]
                 elif len(day) >= 2:
-                    yoil, time_info, day_last_order = day[0], day[1], null
+                    yoil, time_info, day_last_order = day[0], day[1], NULL
                 elif len(day) == 1:
-                    yoil, time_info, day_last_order = day[0], null, null
+                    yoil, time_info, day_last_order = day[0], NULL, NULL
                 else:
-                    yoil, time_info, day_last_order = null, null, null
+                    yoil, time_info, day_last_order = NULL, NULL, NULL
                     
                 if '휴무' in time_info:
                     time_info = "휴무"
@@ -95,7 +96,7 @@ def processed_data_to_csv(area_English, before_file, after_file):
                       contact]
             processed_data.append(dict(zip(keys, values)))
 
-    # csv 파일에 저장
+    #? csv 파일에 저장
     with open(after_file, 'w', encoding= 'UTF-8') as file:
             csvWriter = csv.DictWriter(file, fieldnames=keys)
             csvWriter.writeheader()

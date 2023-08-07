@@ -22,10 +22,10 @@ class Data_Crawl_and_Process:
                 except:
                     print(f'{area_kor} 크롤링 실패')
                 try:
-                    processed_data_to_csv(area_eng, 
+                    processed_data_to_csv(area_kor, 
                                           set_csvfile_name(area_kor, store_type_kor, 'before'),
                                           set_csvfile_name(area_kor, store_type_kor, 'after'))
-                    csv_to_excel(set_csvfile_name(area_kor, store_type_kor, 'before'), 
+                    csv_to_excel(set_csvfile_name(area_kor, store_type_kor, 'after'), 
                                  set_xlsxfile_name(area_kor, store_type_kor, 'after'))
                     print(f'{area_kor} 데이터처리 성공')
                 except:
@@ -36,14 +36,15 @@ class Data_Crawl_and_Process:
         for store_type_kor in store_type_k_to_e.keys():
             try:
                 naver_crawler(area_kor, store_type_kor)
+                #? 엑셀에 데이터 저장
                 csv_to_excel(set_csvfile_name(area_kor, store_type_kor, 'before'),
-                             set_xlsxfile_name(area_kor, store_type_kor, 'before'))  #? 엑셀에 데이터 저장
+                             set_xlsxfile_name(area_kor, store_type_kor, 'before'))
                 print(f'{area_kor} 크롤링 성공')
             except:
                 print(f'{area_kor} 크롤링 실패')
         
             try:
-                processed_data_to_csv(area_k_to_e[area_kor], 
+                processed_data_to_csv(area_kor, 
                                     set_csvfile_name(area_kor, store_type_kor, 'before'), 
                                     set_csvfile_name(area_kor, store_type_kor, 'after'))
                 csv_to_excel(set_csvfile_name(area_kor, store_type_kor, 'after'), 
