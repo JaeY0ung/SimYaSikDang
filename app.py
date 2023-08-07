@@ -2,13 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for
 from Pagination.pagination import Pagination
 from FileTransform.fileTransform import load_csv
 from datetime import datetime
-from src.area import areas_dict_test, areas_dict_ver1, areas_dict_ver2, k_to_e
 from operator import itemgetter
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
-from utils import SECRET_KEY
+from constant import SECRET_KEY, NULL, areas_dict_test, area_k_to_e
 
 #? 오늘이 무슨 요일인지 구하는 함수
 def yoil():
@@ -31,8 +30,8 @@ app.debug = True
 
 db = SQLAlchemy(app)
 
-login_manager = LoginManager(app)  # 로그인 매니저 생성
-login_manager.login_view = "login" # 로그인 페이지 URI 명시
+login_manager = LoginManager(app)  #? 로그인 매니저 생성
+login_manager.login_view = "login" #? 로그인 페이지 URI 명시
 
 class User(UserMixin, db.Model):
     id            = db.Column(db.Integer   , primary_key = True)
@@ -92,7 +91,6 @@ def home():
     today_yoil_eng = yoil()[1]
     timenow = time()
     types = ['맥주,호프', '술집', '포장마차', '이자카야', '요리주점', '오뎅,꼬치', '전통,민속주점', '와인', '바(BAR)']
-    null = '정보 없음'
 
     search      = request.args.get('search',      default='', type=str)
     area        = request.args.get('area',        default='', type=str)
@@ -106,8 +104,8 @@ def home():
         for dong in areas_dict_test[gu]:
             areas.append(dong)
 
-    if area: # shopdata = load_csv(f"./csv/{k_to_e[area]}_processed.csv")
-        restaurants = Restaurants.query.filter(Restaurants.area == k_to_e[area]).all()
+    if area: #? shopdata = load_csv(f"./csv/{area_k_to_e[area]}_processed.csv")
+        restaurants = Restaurants.query.filter(Restaurants.area == area_k_to_e[area]).all()
     else:
         restaurants = Restaurants.query.all()
 
@@ -145,9 +143,9 @@ def home():
         data = []
         for shop in shopdata:
             shop_time = shop[today_yoil_eng + "_opening_hours"]
-            if shop_time in [null, '휴무', '정보없음', '정보 없음']:
+            if shop_time in [NULL, '휴무', '정보없음', '정보 없음']:
                 continue
-            # shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
+            #? shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
             shop_close_time = int(shop_time[-5:-3]) * 100 + int(shop_time[-2:])
             timenow_int = timenow[0] * 100 + timenow[1]
             if timenow_int + timefromnow * 100 <= shop_close_time:
@@ -157,8 +155,8 @@ def home():
     for shop in shopdata:
         shop_time = shop[f"{today_yoil_eng}_opening_hours"]
         
-        if shop_time in [null, '휴무', '정보없음', '정보 없음']:
-            shop['status'] = null
+        if shop_time in [NULL, '휴무', '정보없음', '정보 없음']:
+            shop['status'] = NULL
         else:
             shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
             shop_close_time = int(shop_time[-5:-3]) * 100 + int(shop_time[-2:])
@@ -180,7 +178,7 @@ def home():
 
     print(current_user)
 
-    return render_template("index.html", today_yoil_eng = today_yoil_eng, today_yoil_kor = today_yoil_kor, timenow = timenow, null = null,
+    return render_template("index.html", today_yoil_eng = today_yoil_eng, today_yoil_kor = today_yoil_kor, timenow = timenow, NULL = NULL,
                            areas = areas, types = types, search = search, area=area, type = type, timefromnow = timefromnow, 
                            shopdata = shopdata[pagemaker.start_index : pagemaker.end_index + 1],
                            page = page, total_page = pagemaker.total_page, 
@@ -234,8 +232,8 @@ def login():
             print(f'로그인에 실패횄습니다.')
             return redirect(url_for('login'))
         
-    # 3. 성공시 로그인 정보 저장하고 로그인 페이지로 이동
-    #    실패시 오류 알려주기
+    #? 3. 성공시 로그인 정보 저장하고 로그인 페이지로 이동
+    #?    실패시 오류 알려주기
     return render_template('login.html')
 
 @app.route('/logout')

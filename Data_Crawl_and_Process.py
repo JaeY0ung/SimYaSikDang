@@ -1,47 +1,55 @@
 from Crawler.crawler import naver_crawler
 from FileTransform.fileTransform import csv_to_excel
 from DataProcessing.dataProcesing import processed_data_to_csv
-from src.area import areas_dict_ver1, areas_dict_ver2, areas_dict_test, k_to_e
+from constant import area_k_to_e, set_csvfile_name, set_xlsxfile_name, store_type_k_to_e
 from datetime import datetime
 
-
-
-# 데이터 크롤링하여 csv파일과 엑셀파일로 저장
+#? 데이터 크롤링하여 csv파일과 엑셀파일로 저장
 class Data_Crawl_and_Process:
     def __init__(self):
         self.today = datetime.today()
-        print(f'오늘 날짜: {self.today.strftime("%Y-%m-%d")}')
+        print(f'크롤링 날짜: {self.today.strftime("%Y-%m-%d")}')
     
     def all(self):
-        for gu in areas_dict_test.keys():
-            for area in areas_dict_test[gu]:
+        for area_kor, area_eng in area_k_to_e.items():
+            for store_type_kor in store_type_k_to_e.keys():
                 try:
-                    naver_crawler(area)
-                    csv_to_excel(f"./csv/{k_to_e[area]}.csv", f"./excel/{k_to_e[area]}.xlsx")  # 엑셀에 데이터 저장
-                    print(f'{area} 크롤링 성공')
+                    naver_crawler(area_kor, store_type_kor)
+                    #? 엑셀에 크롤링한 데이터 저장
+                    csv_to_excel(set_csvfile_name(area_kor, store_type_kor, 'before'), 
+                                 set_xlsxfile_name(area_kor, store_type_kor, 'before')) 
+                    print(f'{area_kor} 크롤링 성공')
                 except:
-                    print(f'{area} 크롤링 실패')
-            
+                    print(f'{area_kor} 크롤링 실패')
                 try:
-                    processed_data_to_csv(k_to_e[area], f'./csv/{k_to_e[area]}.csv', f'./csv/{k_to_e[area]}_processed.csv')
-                    csv_to_excel(f"./csv/{k_to_e[area]}_processed.csv", f"./excel/{k_to_e[area]}_processed.xlsx")
-                    print(f'{area} 데이터처리 성공')
+                    processed_data_to_csv(area_eng, 
+                                          set_csvfile_name(area_kor, store_type_kor, 'before'),
+                                          set_csvfile_name(area_kor, store_type_kor, 'after'))
+                    csv_to_excel(set_csvfile_name(area_kor, store_type_kor, 'before'), 
+                                 set_xlsxfile_name(area_kor, store_type_kor, 'after'))
+                    print(f'{area_kor} 데이터처리 성공')
                 except:
-                    print(f'{area} 데이터처리 실패')
+                    print(f'{area_kor} 데이터처리 실패')
         return
     
-    def one(self, area):
-        try:
-            naver_crawler(area)
-            csv_to_excel(f"./csv/{k_to_e[area]}.csv", f"./excel/{k_to_e[area]}.xlsx")  # 엑셀에 데이터 저장
-            print(f'{area} 크롤링 성공')
-        except:
-            print(f'{area} 크롤링 실패')
-    
-        try:
-            processed_data_to_csv(k_to_e[area], f'./csv/{k_to_e[area]}.csv', f'./csv/{k_to_e[area]}_processed.csv')
-            csv_to_excel(f"./csv/{k_to_e[area]}_processed.csv", f"./excel/{k_to_e[area]}_processed.xlsx")
-            print(f'{area} 데이터처리 성공')
-        except:
-            print(f'{area} 데이터처리 실패')
+    def one(self, area_kor):
+        for store_type_kor in store_type_k_to_e.keys():
+            try:
+                naver_crawler(area_kor, store_type_kor)
+                csv_to_excel(set_csvfile_name(area_kor, store_type_kor, 'before'),
+                             set_xlsxfile_name(area_kor, store_type_kor, 'before'))  #? 엑셀에 데이터 저장
+                print(f'{area_kor} 크롤링 성공')
+            except:
+                print(f'{area_kor} 크롤링 실패')
+        
+            try:
+                processed_data_to_csv(area_k_to_e[area_kor], 
+                                    set_csvfile_name(area_kor, store_type_kor, 'before'), 
+                                    set_csvfile_name(area_kor, store_type_kor, 'after'))
+                csv_to_excel(set_csvfile_name(area_kor, store_type_kor, 'after'), 
+                             set_xlsxfile_name(area_kor, store_type_kor, 'after'))
+                print(f'{area_kor} 데이터처리 성공')
+            except:
+                print(f'{area_kor} 데이터처리 실패')
         return
+    
