@@ -2,19 +2,13 @@
 __pycache__/
 .log
 .json
-.pyc
-.db
-
-requirements.txt
-.csv
-.xlsx
-
-/114
-/Crawler
-
-utils.py
 
 instance/
-db/
-build/
-114/
+
+*.pyc
+*.db
+*.csv
+*.xlsx
+
+constant.py
+secret.py
