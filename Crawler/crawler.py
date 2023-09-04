@@ -15,7 +15,8 @@ class NaverCrawler:
         #! chrome_crawler 설정
         # ChromeDriverManager().install()
         # https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/117.0.5938.88/mac-arm64/chromedriver-mac-arm64.zip
-        service = Service('/Users/jeongjaeyeong/.wdm/drivers/chromedriver/mac64/117.0.5938.88/chromedriver-mac-arm64/chromedriver')  #! 크롬 드라이버 최신 버전 자동 설치 후 서비스 생성
+        # service = Service('/Users/jeongjaeyeong/.wdm/drivers/chromedriver/mac64/117.0.5938.88/chromedriver-mac-arm64/chromedriver')  #! 크롬 드라이버 최신 버전 자동 설치 후 서비스 생성
+        service = Service('./crawler/chromedriver/chromedriver')  #! 크롬 드라이버 최신 버전 자동 설치 후 서비스 생성
         chrome_options = Options()  # !브라우저 꺼짐 방지
         chrome_options.add_experimental_option("detach", True)
         chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])  #! 불필요한 에러 메세지 삭제
@@ -72,9 +73,8 @@ class NaverCrawler:
                 pass
             self.crawler.implicitly_wait(2)
 
-            #? 잠시 꺼둠
             #! 페이지의 맨 밑까지 스크롤
-            # self.scroll_down()
+            self.scroll_down()
 
             #! shop들의 목록이 들어있는 className 찾기
             shops = self.crawler.find_element(By.ID, "_pcmap_list_scroll_container").find_elements(By.TAG_NAME, 'li')
@@ -101,11 +101,10 @@ class NaverCrawler:
 
 
                 #! 이름, 종류
-                # TODO : '새로오픈'으로 가져와져서 제대로 가져오기
                 try:
                     title = self.crawler.find_element(By.ID, '_title')
                     title_span = title.find_elements(By.TAG_NAME, 'span')
-                    name = title_span[-2].text # name = title_span[0].text
+                    name = title_span[-2].text # name = title_span[0].text # TODO : '새로오픈'으로 가져와져서 제대로 가져오기
                     type = title_span[-1].text # type = title_span[1].text
                 except:
                     name, type = NULL, NULL
