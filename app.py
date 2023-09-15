@@ -1,96 +1,49 @@
 from flask import Flask, render_template, request, redirect, url_for
-from Pagination.pagination import Pagination
-from FileTransform.fileTransform import load_csv
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_migrate import Migrate
+from pagination import Pagination
+from crawler.fileTransform import load_csv, naver_place_csv_to_db
 from datetime import datetime
 from operator import itemgetter
-from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
-import os
-from constant import SECRET_KEY, NULL, areas_dict_test, area_k_to_e
-
-#? 오늘이 무슨 요일인지 구하는 함수
-def yoil():
-    today = datetime.today().weekday()
-    yoil_arr_k = ['월','화','수','목','금','토','일']
-    yoil_arr_e = ['mon','tue','wed','thu','fri','sat','sun']
-    return yoil_arr_k[today], yoil_arr_e[today]
-
-#? 지금이 몇신지 구하는 함수 (ex. 18:30)
-def time():
-    now = datetime.now()
-    return now.hour, now.minute
+from models import db, User, UserLike, Place, TypeCode
+from crawler.constant import dict_area_gu_to_dong, dict_area_kor_to_eng, dict_searchtype_to_code
+from crawler.constant import SECRET_KEY, NULL, dict_area_kor_to_eng
+from crawler.Data_Crawl_and_Process import Data_Crawl_and_Process
 
 app = Flask(__name__)
-
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///simyasikdang.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.debug = True
 
-db = SQLAlchemy(app)
-
-login_manager = LoginManager(app)  #? 로그인 매니저 생성
-login_manager.login_view = "login" #? 로그인 페이지 URI 명시
-
-class User(UserMixin, db.Model):
-    id            = db.Column(db.Integer   , primary_key = True)
-    userid        = db.Column(db.String(80), unique = True     , nullable = False)
-    password_hash = db.Column(db.String(120)                    , nullable = False)
-    email         = db.Column(db.String(80), unique = True     , nullable = True)
-    User_R = db.relationship('UserLike')
-    
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-    
-class UserLike(db.Model):
-    id            = db.Column(db.Integer    , primary_key = True)
-    userid        = db.Column(db.String(64) , db.ForeignKey('user.id'))
-    restaurantid  = db.Column(db.String(64) , db.ForeignKey('restaurants.id'))
-    likesdate     = db.Column(db.String(64) , nullable = True)
-
+login_manager = LoginManager(app)  #! 로그인 매니저 생성
+login_manager.login_view = "login" #! 로그인 페이지 URI 명시
+login_manager.init_app(app)
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
-class Restaurants(db.Model):
-    id                   = db.Column(db.Integer, primary_key = True)
-    create_time          = db.Column(db.String(64))
-    area                 = db.Column(db.String(64))
-    name                 = db.Column(db.String(64))
-    type                 = db.Column(db.String(64))
-    star_rating          = db.Column(db.String(64))
-    review_sum           = db.Column(db.String(64))
-    address              = db.Column(db.String(64))
-    mon_opening_hours    = db.Column(db.String(64))
-    mon_last_order_time  = db.Column(db.String(64))
-    tue_opening_hours    = db.Column(db.String(64))
-    tue_last_order_time  = db.Column(db.String(64))
-    wed_opening_hours    = db.Column(db.String(64))
-    wed_last_order_time  = db.Column(db.String(64))
-    thu_opening_hours    = db.Column(db.String(64))
-    thu_last_order_time  = db.Column(db.String(64))
-    fri_opening_hours    = db.Column(db.String(64))
-    fri_last_order_time  = db.Column(db.String(64))
-    sat_opening_hours    = db.Column(db.String(64))
-    sat_last_order_time  = db.Column(db.String(64))
-    sun_opening_hours    = db.Column(db.String(64))
-    sun_last_order_time  = db.Column(db.String(64))
-    contact              = db.Column(db.String(64))
-    restaurants_R = db.relationship('UserLike')
+db.init_app(app)
 
-    def __repr__(self):
-        return f'<Restaurants {self.area}, {self.name}, {self.type}, {self.star_rating}, {self.review_sum}, {self.contact}>'
+# Migrate 설정
+migrate = Migrate(app, db)
+
+def yoil(): #! 오늘이 무슨 요일인지 구하는 함수 return (한글 요일, 영어 요일)
+    today = datetime.today().weekday()
+    yoil_arr_kor = ['월','화','수','목','금','토','일']
+    yoil_arr_eng = ['mon','tue','wed','thu','fri','sat','sun']
+    return yoil_arr_kor[today], yoil_arr_eng[today]
+
+def time(): #! 지금이 몇신지 구하는 함수 return (시간, 분)
+    now = datetime.now()
+    return now.hour, now.minute
 
 @app.route('/')
 def home():
     today_yoil_kor = yoil()[0]
     today_yoil_eng = yoil()[1]
-    timenow = time()
-    types = ['맥주,호프', '술집', '포장마차', '이자카야', '요리주점', '오뎅,꼬치', '전통,민속주점', '와인', '바(BAR)']
+    timenow        = time()
+    types          = ['맥주,호프', '술집', '포장마차', '이자카야', '요리주점', '오뎅,꼬치', '전통,민속주점', '와인', '바(BAR)']
 
     search      = request.args.get('search',      default='', type=str)
     area        = request.args.get('area',        default='', type=str)
@@ -100,40 +53,49 @@ def home():
 
     #? default 창: 모든 지역의 데이터 다 가져오기
     areas = [] #? index.html option으로 사용
-    for gu in areas_dict_test.keys():
-        for dong in areas_dict_test[gu]:
-            areas.append(dong)
+    for dong in dict_area_kor_to_eng:
+        areas.append(dong)
 
     if area: #? shopdata = load_csv(f"./csv/{area_k_to_e[area]}_processed.csv")
-        restaurants = Restaurants.query.filter(Restaurants.area == area_k_to_e[area]).all()
+        places = Place.query.filter(Place.area == dict_area_kor_to_eng[area]).all()
     else:
-        restaurants = Restaurants.query.all()
+        places = Place.query.all()
 
     shopdata = []
-    for restaurant in restaurants:
-        shopdata.append({'uuid'              : restaurant.id,
-                        'create_time'        : restaurant.create_time,
-                        'area'               : restaurant.area,
-                        'name'               : restaurant.name,
-                        'type'               : restaurant.type,
-                        'star_rating'        : restaurant.star_rating,
-                        'review_sum'         : restaurant.review_sum,
-                        'address'            : restaurant.address,
-                        'mon_opening_hours'  : restaurant.mon_opening_hours,
-                        'mon_last_order_time': restaurant.mon_last_order_time,
-                        'tue_opening_hours'  : restaurant.tue_opening_hours,
-                        'tue_last_order_time': restaurant.tue_last_order_time,
-                        'wed_opening_hours'  : restaurant.wed_opening_hours,
-                        'wed_last_order_time': restaurant.wed_last_order_time,
-                        'thu_opening_hours'  : restaurant.thu_opening_hours,
-                        'thu_last_order_time': restaurant.thu_last_order_time,
-                        'fri_opening_hours'  : restaurant.fri_opening_hours,
-                        'fri_last_order_time': restaurant.fri_last_order_time,
-                        'sat_opening_hours'  : restaurant.sat_opening_hours,
-                        'sat_last_order_time': restaurant.sat_last_order_time,
-                        'sun_opening_hours'  : restaurant.sun_opening_hours,
-                        'sun_last_order_time': restaurant.sun_last_order_time,
-                        'contact'            : restaurant.contact})
+    for place in places:
+        shopdata.append({
+                        'uuid'               : place.id,
+                        'type_code'          : place.type_code,
+                        'name'               : place.name,
+                        'type'               : place.type,
+                        'star_rating'        : place.star_rating,
+                        'address_si'         : place.address_si,
+                        'address_gu'         : place.address_gu,
+                        'address_lo'         : place.address_lo,
+                        'address_detail'     : place.address_detail,
+                        'contact'            : place.contact,
+                        'lat'                : place.lat,
+                        'lng'                : place.lng,
+                        'naver_place_id'     : place.naver_place_id,
+                        'place_url'          : place.place_url,
+                        'road_url'           : place.road_url,
+                        'review_total'       : place.review_total,
+                        'mon_opening_hours'  : place.mon_opening_hours,
+                        'mon_last_order_time': place.mon_last_order_time,
+                        'tue_opening_hours'  : place.tue_opening_hours,
+                        'tue_last_order_time': place.tue_last_order_time,
+                        'wed_opening_hours'  : place.wed_opening_hours,
+                        'wed_last_order_time': place.wed_last_order_time,
+                        'thu_opening_hours'  : place.thu_opening_hours,
+                        'thu_last_order_time': place.thu_last_order_time,
+                        'fri_opening_hours'  : place.fri_opening_hours,
+                        'fri_last_order_time': place.fri_last_order_time,
+                        'sat_opening_hours'  : place.sat_opening_hours,
+                        'sat_last_order_time': place.sat_last_order_time,
+                        'sun_opening_hours'  : place.sun_opening_hours,
+                        'sun_last_order_time': place.sun_last_order_time,
+                        'created_at'         : place.created_at,
+                        })
 
     if search:
         shopdata = [shop for shop in shopdata if search in shop['name']]
@@ -243,12 +205,49 @@ def logout():
     return redirect(url_for('home'))
 
 @app.route('/singo')
+@login_required
 def singo():
     area = request.args.get('area', default='', type=str)
     name = request.args.get('name', default='', type=str)
     return render_template('singo.html', area = area, name = name)
 
+
+@app.route('/data-process')
+@login_required
+def data_process():
+    if current_user.userid == "admin":
+        return render_template('data_process.html')
+    return render_template('404.html')
+
+
+@app.route('/crawl')
+@login_required
+def crawl():
+    if current_user.userid == "admin":
+        data_processor = Data_Crawl_and_Process()
+        data_processor.get_all_area()
+        return redirect(url_for('data_process'))
+    return render_template('404.html')
+
+
+@app.route('/save-data-to-db')
+@login_required
+def save_data_to_db():
+    if current_user.userid == "admin":
+        #! db에 저장 코드
+        for dongs in dict_area_gu_to_dong.values():
+            for dong in dongs:
+                for searchtype, code in dict_searchtype_to_code.items():
+                    try:
+                        naver_place_csv_to_db(dong, code)
+                        print(f'{dong} {searchtype} 데이터 저장 완료')
+                    except:
+                        print(f'{dong} {searchtype} 데이터 저장 실패')
+        return redirect(url_for('data_process'))
+    return render_template('404.html')
+
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host="0.0.0.0", port=8888)
+    app.run(port=8000) # app.run(host="0.0.0.0", port=8000)
