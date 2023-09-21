@@ -121,7 +121,7 @@
                     {% set shop = shopdata[i] %}
                         <tr>
                             <td><img class="star" id="star_{{ i }}" src="./static/IMG/star/empty_yellow_star.png" alt="star_{{ i }}" width="20" style="cursor: pointer;"></td>
-                            <td><a href="{{ shop.place_url }}" target="_blank">{{ shop.name }}</a></td>
+                            <td><a href="https://map.naver.com/p/entry/place/{{ shop.naver_place_id }}?c=15.00,0,0,0,dh" target="_blank">{{ shop.name }}</a></td>
                             <td>{{ shop.star_rating }}</td>
                             <td>{{ shop.review_total }}</td>
                             <td>{{ shop.status }}</td>
