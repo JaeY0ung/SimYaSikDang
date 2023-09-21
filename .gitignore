@@ -3,7 +3,7 @@ __pycache__/
 .log
 .json
 
-instance/
+# instance/
 
 *.pyc
 *.db
