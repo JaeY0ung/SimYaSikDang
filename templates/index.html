@@ -121,15 +121,15 @@
                     {% set shop = shopdata[i] %}
                         <tr>
                             <td><img class="star" id="star_{{ i }}" src="./static/IMG/star/empty_yellow_star.png" alt="star_{{ i }}" width="20" style="cursor: pointer;"></td>
-                            <td><a href="https://map.naver.com/v5/search/{{ shop['name'] }}/place" target="_blank">{{ shop['name'] }}</a></td>
-                            <td>{{ shop['star_rating'] }}</td>
-                            <td>{{ shop['review_sum'] }}</td>
-                            <td>{{ shop['status'] }}</td>
-                            <td>{{ shop['type'] }}</td>
+                            <td><a href="{{ shop.place_url }}" target="_blank">{{ shop.name }}</a></td>
+                            <td>{{ shop.star_rating }}</td>
+                            <td>{{ shop.review_total }}</td>
+                            <td>{{ shop.status }}</td>
+                            <td>{{ shop.type }}</td>
                             <td>{{ shop[today_yoil_eng + "_opening_hours"] }}</td>
-                            <td>{{ shop['contact'] }}</td>
-                            <td><a href="https://map.naver.com/v5/directions/-/14129228.684381623,4517601.068035996,{{ area }} {{ shop['name'] }},1151030658,PLACE_POI/-/transit?c=15,0,0,0,dh&isCorrectAnswer=true" target="_blank" >{{ shop['address'] }}</a></td>
-                            <td><a style="color: crimson" href="/singo?area={{ area }}&name={{ shop['name'] }}" target="_blank">신고하기</a></td>
+                            <td>{{ shop.contact }}</td>
+                            <td><a href="{{ shop.road_url }}" target="_blank" >{{ shop.address_si }} {{ shop.address_gu }} {{ shop.address_lo }} {{ shop.address_detail }}</a></td>
+                            <td><a style="color: crimson" href="/singo?area={{ shop.address_si }}&name={{ shop.name }}" target="_blank">신고하기</a></td>
                         </tr>
                     {% endfor %}
                 </tbody>
