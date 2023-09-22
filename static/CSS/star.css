@@ -1,0 +1,11 @@
+body{
+    text-align: center;
+}
+.cover {
+    display: flex;
+    justify-content: space-between;
+}
+a {
+    color: rgb(26, 118, 176);
+    text-decoration: none;
+}
