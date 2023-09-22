@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% block title %}{% endblock %}
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ KAKAO_JAVASCRIPT_KEY }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/star.css')  }}">
+</head>
+<body>
+
+    <div style="width: 90%; margin:0 auto;">
+        {% block auth_bar %}
+            <div class="d-flex justify-content-between mt-5">
+                {% include 'components/today_description_div.html' %}
+
+                {% if current_user.is_authenticated %}
+                    {% include 'components/logout_div.html' %}
+                {% else %}
+                    {% include 'components/login_register_div.html' %}
+                {% endif %}
+            </div>
+        {% endblock %}
+
+        {% block header %}
+        {% endblock %}
+
+        <br>
+        
+        {% block filter %}
+        {% endblock %}
+    
+        <br>
+    
+        {% block contents %}
+        {% endblock %}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/like_place.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kakao_map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/copy_address.js') }}"></script>
+</body>
+</html>

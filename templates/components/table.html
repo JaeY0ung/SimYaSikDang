@@ -1,0 +1,52 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col" id="open_place_list" colspan="5">영업 중인 술집</th>
+            <th scope="col" id="favorite_place" colspan="4">나의 즐겨찾기</th>
+        </tr>
+    </thead>
+    <tr>
+        <th scope="col" width="80">즐겨찾기</th>
+        <th scope="col" width="110">상점 명</th>
+        <th scope="col" width="80">별점</th>
+        <th scope="col" width="80">영업 여부</th>
+        <th scope="col" width="80">가게 종류</th>
+        <th scope="col" width="120">영업 시간<br>(오늘: {{ today_yoil_kor }})</th>
+        <th scope="col" width="150">가게 연락처</th>
+        <th scope="col" width="150">가게 주소</th>
+        <th scope="col" width="80">신고</th>
+    </tr>
+
+    <tbody class="table-group-divider">
+        {% for i in range(place_data | length) %}
+            {% set place = place_data[i] %}
+            <tr>
+                <td>
+                    <img class="star" id="star_{{ i }}" src="./static/IMG/star/empty_yellow_star.png" alt="star_{{ i }}" width="20" style="cursor: pointer;">
+                </td>
+                <td>
+                    <a href="https://map.naver.com/p/entry/place/{{ place.naver_place_id }}?c=15.00,0,0,0,dh" target="_blank">{{ place.name }}</a>
+                </td>
+                <td style="width: 03rem;">{{ place.star_rating }}</td>
+                <td style="width: 06rem;">{{ place.status }}</td>
+                <td style="width: 06rem;">{{ place.type }}</td>
+                <td style="width: 10rem;">{{ place[today_yoil_eng + "_opening_hours"] }}</td>
+                <td style="width: 11rem;">{{ place.contact }}</td>
+                <td style="width: 11rem;">
+                    <a href="{{ place.road_url }}" target="_blank" >
+                        {% if place.address | length > 12 %}
+                            {{ place.address[:12] }}...
+                        {% else %}
+                            {{ place.address }}
+                        {% endif %}
+                    </a>
+                    <span style="cursor:pointer" class="copy_address_btn" data-address="{{ place.address_si }} {{ place.address_gu }} {{ place.address_lo }} {{ place.address_detail }}">
+                        <img style="height:1rem;" src="{{ url_for('static', filename='img/copy_icon.png') }}" alt="복사하기">
+                    </span>
+
+                </td>
+                <td><a style="color: crimson" href="/singo?area={{ place.address_si }}&name={{ place.name }}" target="_blank">신고</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

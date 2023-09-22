@@ -1,0 +1,58 @@
+<div class="d-flex justify-content-end">
+    <!--? 지역 필터 -->
+    {% if search %}
+        <input type="text" name="search" value="{{ search }}" style="width: 100px; height: 30px; margin-top: 4px">
+    {% else %}
+        <input type="text" name="search" placeholder="상점명 입력" style="width: 100px; height: 30px; margin-top: 4px">
+    {% endif %}
+    <select name="area" class="mx-1" style="width: 100px; height: 30px; margin-top: 4px">
+        <div>
+            {% if area %}
+                <option value="{{ area }}" selected hidden>{{ area }}</option>
+            {% else %}
+                <option value="" selected disabled hidden>지역 선택</option>
+            {% endif %}
+        </div>
+        <div>
+            <option value="">전체</option>
+            {% for i in areas %}
+                <option value="{{ i }}">{{ i }}</option>
+            {% endfor %}
+        </div>
+    </select>
+    <!-- TODO: multiple 속성 넣기  -->
+    <!--? 타입 필터 -->
+    <select name="type" style="width: 100px; height: 30px; margin-top: 4px">
+        <div>
+            {% if type %}
+                <!-- disabled 속성을 제거하여 클릭하지 않아도 계속해서 값을 이것으로 가지도록 함) -->
+                <option value="{{ type }}" selected hidden>{{ type }}</option>
+            {% else %}
+                <option value="{{ type }}" selected disabled hidden>가게 종류</option>
+            {% endif %}
+        </div>
+        <div>
+            <option value="">전체</option>
+            {% for t in types %}
+                <option value="{{ t }}">{{ t }}</option>
+            {% endfor %}
+        </div>
+    </select>
+    <!--? 시간 필터 -->
+    <select name="timefromnow" style="width: 120px; height: 30px; margin-top: 4px">
+        <div>
+            {% if timefromnow %}
+                <option value="{{ timefromnow }}" selected hidden>{{ timefromnow }}시간 이상</option>
+            {% else %}
+                <option value="" selected disabled hidden>남은 영업시간</option>
+            {% endif %}
+        </div>
+        <div>
+            <option value="">전체</option>
+            {% for t in [[2, '2시간 이상'], [3, '3시간 이상'], [4, '4시간 이상'], [6, '6시간 이상']] %}
+                <option value="{{ t[0] }}">{{ t[1] }}</option>
+            {% endfor %}
+        </div>
+    </select>
+    <input type="submit" value="이동" class="btn btn-primary mx-1" >
+</div>

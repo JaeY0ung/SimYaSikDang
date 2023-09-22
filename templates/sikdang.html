@@ -1,0 +1,37 @@
+{% extends 'components/layout.html' %}
+
+
+{% block title %}
+    심야식당
+{% endblock %}
+
+
+{% block header %}
+    <h1 class="center">
+        <a href="/sikdang" style="color: black;">
+            심야식당
+        </a>
+    </h1>
+{% endblock %}
+
+
+{% block filter %}
+    <form method="get">
+        {% include 'components/filter.html' %}
+    </form>
+{% endblock %}
+
+
+{% block contents %}
+    <div class="d-flex jusify-contents-center gap-5">
+        <div>
+            {% include 'components/table.html' %}
+        </div>
+        <div style="margin-top: 9%;">
+            {% include 'components/kakao_map.html' %}
+        </div>
+    </div>
+
+    {% include 'components/pagination.html' %}
+{% endblock %}
+
