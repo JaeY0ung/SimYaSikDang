@@ -1,36 +1,30 @@
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
+import uuid
 
 db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
-    id            = db.Column(db.Integer   , primary_key = True)
-    userid        = db.Column(db.String(80), unique = True, nullable = False)
-    password_hash = db.Column(db.String(120),               nullable = False)
+    id            = db.Column(db.Integer, primary_key = True)
+    username      = db.Column(db.String(80), unique = True, nullable = False) # 아이디
+    password_hash = db.Column(db.String(120),               nullable = False) # 비밀번호 
+    nickname      = db.Column(db.String(80),                nullable = True) # TODO : unique = True 향후 추가할 것
     email         = db.Column(db.String(80), unique = True)
-    User_R        = db.relationship('UserLike')
-    
+    user_like     = db.relationship('UserLike', backref=db.backref('user')) #? 잘 모름
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
-    
-class UserLike(db.Model):
-    __tablename__ = 'userlike'
-    id            = db.Column(db.Integer, primary_key = True)
-    userid        = db.Column(db.String(64), db.ForeignKey('user.id'),  nullable = False)
-    placeid       = db.Column(db.String(64), db.ForeignKey('place.id'), nullable = False)
-    likesdate     = db.Column(db.String(64), nullable = True)
-
 
 class Place(db.Model):
-    __tablename__ = 'place'
+    __tablename__        = 'place'
     id                   = db.Column(db.Integer, primary_key = True)
-    type_code            = db.Column(db.String(32), db.ForeignKey('typecode.id')) 
+    uuid                 = db.Column(db.String(64), nullable=True)   # uri에 쓸거 (스크랩핑에 따른 트래픽 방지를 위해 난수)
+    type_code            = db.Column(db.Integer, db.ForeignKey('typecode.id', ondelete='CASCADE')) 
     name                 = db.Column(db.String(64), nullable=False)
     type                 = db.Column(db.String(64), nullable=False)
     star_rating          = db.Column(db.String(64))
@@ -60,11 +54,20 @@ class Place(db.Model):
     sun_opening_hours    = db.Column(db.String(64))
     sun_last_order_time  = db.Column(db.String(64))
     created_at           = db.Column(db.String(64))
-    place_R = db.relationship('UserLike')
+    user_like            = db.relationship('UserLike', backref=db.backref('place')) #? 잘 모름
 
     def __repr__(self):
-        return f'<Place {self.address_si}, {self.name}, {self.type}, {self.star_rating}, {self.review_total}, {self.contact}>'
+        return f'<Place 지역:{self.address_si}, 이름:{self.name}, 가게종류:{self.type}, 별점:{self.star_rating}, 리뷰수:{self.review_total}, 연락처:{self.contact}>'
+    
+class UserLike(db.Model):
+    __tablename__ = 'userlike'
+    id            = db.Column(db.Integer, primary_key = True)
+    userid        = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'),  nullable = False)
+    placeid       = db.Column(db.Integer, db.ForeignKey('place.id', ondelete='CASCADE'), nullable = False)
+    likedate      = db.Column(db.String(64), nullable = False)
 
+    def __repr__(self):
+        return f'<UserLike ({self.id}) {self.userid} like {self.placeid}>'
 
 class TypeCode(db.Model):
     __tablename__ = 'typecode'
