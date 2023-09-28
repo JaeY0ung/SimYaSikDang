@@ -24,7 +24,7 @@ def processed_data_to_csv(area_kor, type_code, before_file, after_file):
 
             #! 별점  
             if star_rating == NULL:
-                star_rating = 0.0
+                star_rating = 0.00
 
             #! 주소
             if address == NULL:
@@ -106,7 +106,7 @@ def processed_data_to_csv(area_kor, type_code, before_file, after_file):
                         for key in opening_hours_by_day.keys():
                             opening_hours_by_day[key] = {"opening_hours": time_info, "last_order_time": day_last_order}
                     elif yoil[0] in ['월', '화', '수', '목', '금', '토', '일']:
-                        opening_hours_by_day[yoil] = {"opening_hours": time_info, "last_order_time": day_last_order}
+                        opening_hours_by_day[yoil[0]] = {"opening_hours": time_info, "last_order_time": day_last_order}
                 except:
                     pass
                                 
