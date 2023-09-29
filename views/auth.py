@@ -14,22 +14,22 @@ def load_user(user_id):
 @bp.route('/register', methods = ["GET", "POST"])
 def register():
     if request.method == "POST":
-        userid   = request.form["id"]
-        pw       = request.form["pw"]
-        pw_again = request.form["pw_again"]
-        name     = request.form["name"]
-        nickname = request.form["nickname"]
-        contact  = request.form["contact"]
-        email    = request.form["email"]
+        username       = request.form["username"]
+        password       = request.form["password"]
+        password_again = request.form["password_again"]
+        name           = request.form["name"]
+        nickname       = request.form["nickname"]
+        contact        = request.form["contact"].replace('-', '')
+        email          = request.form["email"]
 
-        if pw != pw_again:
+        if password != password_again:
             print(f'비밀번호를 다시 입력해주세요')
             return redirect(url_for('auth.register'))
 
         email = request.form["email"]
 
-        existing_user_by_userid = User.query.filter_by(userid=userid).first()
-        existing_user_by_email  = User.query.filter_by(email=email).first()
+        existing_user_by_userid = User.query.filter_by(username = username).first()
+        existing_user_by_email  = User.query.filter_by(email = email).first()
 
         if existing_user_by_userid:
             print('이미 있는 아이디입니다.')
@@ -39,13 +39,13 @@ def register():
             print('이미 사용하는 이메일입니다.')
             return redirect(url_for('auth.register'))
 
-        new_user = User(userid = userid, 
-                        name = name,
+        new_user = User(username = username, 
+                        name     = name,
                         nickname = nickname,
-                        contact = contact,
-                        email = email)
+                        contact  = contact,
+                        email    = email)
         
-        new_user.set_password(pw)
+        new_user.set_password(password)
         db.session.add(new_user)
         db.session.commit()
         return redirect(url_for('common.index'))
