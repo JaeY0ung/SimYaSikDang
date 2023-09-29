@@ -1,18 +1,20 @@
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-import uuid
 
 db = SQLAlchemy()
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
     id            = db.Column(db.Integer, primary_key = True)
-    username      = db.Column(db.String(80), unique = True, nullable = False) # 아이디
-    password_hash = db.Column(db.String(120),               nullable = False) # 비밀번호 
-    nickname      = db.Column(db.String(80),                nullable = True) # TODO : unique = True 향후 추가할 것
-    email         = db.Column(db.String(80), unique = True)
+    username      = db.Column(db.String(64), unique = True, nullable = False) # 아이디
+    password_hash = db.Column(db.String(128),               nullable = False) # 비밀번호 
+    nickname      = db.Column(db.String(64)) # TODO : unique = True 향후 추가할 것
+    contact       = db.Column(db.String(64))
+    email         = db.Column(db.String(64), unique = True)
+    name          = db.Column(db.String(64))
     user_like     = db.relationship('UserLike', backref=db.backref('user')) #? 잘 모름
+    singo_place   = db.relationship('SingoPlace', backref=db.backref('user')) #? 잘 모름
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -38,7 +40,8 @@ class Place(db.Model):
     lng                  = db.Column(db.String(64))
     naver_place_id       = db.Column(db.String(64), nullable=False)
     place_url            = db.Column(db.String(64))
-    road_url             = db.Column(db.String(64))
+    naver_road_url       = db.Column(db.String(64))
+    kakao_road_url       = db.Column(db.String(64))
     mon_opening_hours    = db.Column(db.String(64))
     mon_last_order_time  = db.Column(db.String(64))
     tue_opening_hours    = db.Column(db.String(64))
@@ -55,19 +58,20 @@ class Place(db.Model):
     sun_last_order_time  = db.Column(db.String(64))
     created_at           = db.Column(db.String(64))
     user_like            = db.relationship('UserLike', backref=db.backref('place')) #? 잘 모름
+    singo_place          = db.relationship('SingoPlace', backref=db.backref('place')) #? 잘 모름
 
     def __repr__(self):
-        return f'<Place 지역:{self.address_si}, 이름:{self.name}, 가게종류:{self.type}, 별점:{self.star_rating}, 리뷰수:{self.review_total}, 연락처:{self.contact}>'
+        return f'<Place({self.id}) 지역:{self.address_si}, 이름:{self.name}, 가게종류:{self.type}, 별점:{self.star_rating}, 리뷰수:{self.review_total}, 연락처:{self.contact}>'
     
 class UserLike(db.Model):
     __tablename__ = 'userlike'
     id            = db.Column(db.Integer, primary_key = True)
-    userid        = db.Column(db.Integer, db.ForeignKey('user.id', ondelete='CASCADE'),  nullable = False)
+    userid        = db.Column(db.Integer, db.ForeignKey('user.id',  ondelete='CASCADE'), nullable = False)
     placeid       = db.Column(db.Integer, db.ForeignKey('place.id', ondelete='CASCADE'), nullable = False)
     likedate      = db.Column(db.String(64), nullable = False)
 
     def __repr__(self):
-        return f'<UserLike ({self.id}) {self.userid} like {self.placeid}>'
+        return f'<UserLike({self.id}) user:{self.userid}  place:{self.placeid}>'
 
 class TypeCode(db.Model):
     __tablename__ = 'typecode'
@@ -76,4 +80,15 @@ class TypeCode(db.Model):
     code = db.Column(db.String(64), unique = True)
 
     def __repr__(self):
-        return f'<TypeCode {self.id}, {self.type}, {self.code}>'
+        return f'<TypeCode({self.id}) type:{self.type}, code:{self.code}>'
+    
+class SingoPlace(db.Model):
+    __tablename__ = 'singoplace'
+    id            = db.Column(db.Integer, primary_key = True)
+    userid        = db.Column(db.Integer, db.ForeignKey('user.id',  ondelete='CASCADE'), nullable = True) # TODO : cascade 옵션 바꿔야 함
+    placeid       = db.Column(db.Integer, db.ForeignKey('place.id', ondelete='CASCADE'), nullable = False)
+    contact       = db.Column(db.String(64))
+    email         = db.Column(db.String(64))
+
+    def __repr__(self):
+        return f'<SingoPlace({self.id}) user:{self.userid}, place:{self.placeid}>'

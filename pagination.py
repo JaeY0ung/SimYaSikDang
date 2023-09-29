@@ -4,7 +4,7 @@ import math
 # 출력값: start_index, end_index, pagination_start, pagination_end, move_page_front, move_page_back
 class Pagination:
     def __init__(self, data, page):
-        self.makepagination(data, page, data_per_page=6, page_per_pagination=10)
+        self.makepagination(data, page, data_per_page=10, page_per_pagination=5)
 
     def makepagination(self, data, page, data_per_page, page_per_pagination):
         num_data = len(data) # data에 있는 정보의 개수
