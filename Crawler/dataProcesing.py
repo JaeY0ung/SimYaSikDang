@@ -39,10 +39,11 @@ def processed_data_to_csv(area_kor, type_code, before_file, after_file):
                 address_detail = ' '.join(address_list[3:])
 
             if place_url == NULL:
-                naver_place_id, road_url = NULL, NULL
+                naver_place_id, naver_road_url, kakao_road_url = NULL, NULL, NULL
             else:
                 naver_place_id = place_url.replace('https://pcmap.place.naver.com/', '').split('/')[1]
-                road_url = f"https://map.naver.com/p/directions/-/,,,{ naver_place_id },PLACE_POI/-/walk?c=13.00,0,0,0,dh"
+                naver_road_url = f"https://map.naver.com/p/directions/-/,,,{ naver_place_id },PLACE_POI/-/walk?c=13.00,0,0,0,dh"
+                kakao_road_url = f"https://map.kakao.com/link/to/{ name },{ lng },{ lat }"
 
             opening_hours_by_day = {
                                     '월': {"opening_hours": NULL, "last_order_time": NULL},
@@ -66,7 +67,7 @@ def processed_data_to_csv(area_kor, type_code, before_file, after_file):
                 else:
                     yoil, time_info, day_last_order = NULL, NULL, NULL
                 
-                print(f'<{name}> 요일: {yoil}, time_info: {time_info}, 라스트오더: {day_last_order}')
+                # print(f'<{name}> 요일: {yoil}, time_info: {time_info}, 라스트오더: {day_last_order}')
                     
                 if '휴무' in time_info:
                     time_info = "휴무"
@@ -80,7 +81,7 @@ def processed_data_to_csv(area_kor, type_code, before_file, after_file):
                         open_hour, open_minute = int(open_time[:2]), int(open_time[3:])
                     else:
                         open_hour, open_minute = 0, 0
-                    print(open_hour, open_minute)
+                    # print(open_hour, open_minute)
 
                     if close_time != "":
                         close_hour, close_minute = int(close_time[:2]), int(close_time[3:])
@@ -112,7 +113,7 @@ def processed_data_to_csv(area_kor, type_code, before_file, after_file):
                                 
             keys = ['created_at', 'name', 'type', 'star_rating', 'review_total', 'contact', 'type_code',
                     'address', "address_si", "address_gu", "address_lo",  "address_detail",
-                    'lat', 'lng', 'naver_place_id', 'place_url', 'road_url',
+                    'lat', 'lng', 'naver_place_id', 'place_url', 'naver_road_url', 'kakao_road_url',
                     'mon_opening_hours', 'mon_last_order_time',
                     'tue_opening_hours', 'tue_last_order_time',
                     'wed_opening_hours', 'wed_last_order_time',
@@ -124,7 +125,7 @@ def processed_data_to_csv(area_kor, type_code, before_file, after_file):
             
             values = [created_at, name, type, star_rating, review_total, contact, type_code,
                       address, address_si, address_gu, address_lo, address_detail,
-                      lat, lng, naver_place_id, place_url, road_url,
+                      lat, lng, naver_place_id, place_url, naver_road_url, kakao_road_url,
                       opening_hours_by_day['월']['opening_hours'], opening_hours_by_day['월']['last_order_time'],
                       opening_hours_by_day['화']['opening_hours'], opening_hours_by_day['화']['last_order_time'],
                       opening_hours_by_day['수']['opening_hours'], opening_hours_by_day['수']['last_order_time'],

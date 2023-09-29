@@ -35,6 +35,10 @@ def naver_place_csv_to_db(dong, code):
     # Place.query.delete()
     # db.session.commit()
 
+    # #! (일회용) place 이름이 새로오픈인 거 지우기
+    # Place.query.filter_by(name='새로오픈').delete()
+    # db.session.commit()
+
     csvfile = f"./crawler/csv/{dict_area_kor_to_eng[dong]}_{code}_processed.csv"
     
     with open(csvfile, newline="") as file:
@@ -57,7 +61,22 @@ def naver_place_csv_to_db(dong, code):
                 search_place.contact        = place['contact']
                 search_place.naver_place_id = place['naver_place_id']
                 search_place.place_url      = place['place_url']
-                search_place.road_url       = place['road_url']
+                search_place.naver_road_url = place['naver_road_url']
+                search_place.kakao_road_url = place['kakao_road_url']
+                search_place.mon_opening_hours   = place['mon_opening_hours']
+                search_place.mon_last_order_time = place['mon_last_order_time']
+                search_place.tue_opening_hours   = place['tue_opening_hours']
+                search_place.tue_last_order_time = place['tue_last_order_time']
+                search_place.wed_opening_hours   = place['wed_opening_hours']
+                search_place.wed_last_order_time = place['wed_last_order_time']
+                search_place.thu_opening_hours   = place['thu_opening_hours']
+                search_place.thu_last_order_time = place['thu_last_order_time']
+                search_place.fri_opening_hours   = place['fri_opening_hours']
+                search_place.fri_last_order_time = place['fri_last_order_time']
+                search_place.sat_opening_hours   = place['sat_opening_hours']
+                search_place.sat_last_order_time = place['sat_last_order_time']
+                search_place.sun_opening_hours   = place['sun_opening_hours']
+                search_place.sun_last_order_time = place['sun_last_order_time']
                 search_place.created_at     = place['created_at']
                 print(f'존재하는  장소입니다: {search_place.name} update 완료')
 
@@ -78,7 +97,8 @@ def naver_place_csv_to_db(dong, code):
                     lng                 = place['lng'],
                     naver_place_id      = place['naver_place_id'],
                     place_url           = place['place_url'],
-                    road_url            = place['road_url'],
+                    naver_road_url      = place['naver_road_url'],
+                    kakao_road_url      = place['kakao_road_url'],
                     mon_opening_hours   = place['mon_opening_hours'],
                     mon_last_order_time = place['mon_last_order_time'],
                     tue_opening_hours   = place['tue_opening_hours'],

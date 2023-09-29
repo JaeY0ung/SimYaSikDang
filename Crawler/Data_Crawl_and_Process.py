@@ -38,3 +38,8 @@ class Data_Crawl_and_Process:
         for dongs in dict_area_gu_to_dong.values():
             for dong in dongs:
                 self.get_one_area(dong)
+    
+    def get_pub_only(self):
+        for dongs in dict_area_gu_to_dong.values():
+            for dong in dongs:
+                self.get_one(dong, '술집')
