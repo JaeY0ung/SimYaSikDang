@@ -1,13 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>데이터 생성/관리 페이지</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
-            integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-</head>
-<body>
+{% extends 'components/layout.html' %}
+
+
+{% block title %}
+    데이터 생성/관리 페이지
+{% endblock %}
+
+
+{% block header %}
+  <h1 class="center">
+    <a href="{{ url_for('pub.index') }}" style="color: black;">
+      심야식당
+    </a>
+  </h1>
+{% endblock %}
+
+
+{% block filter %}
+{% endblock %}
+
+
+{% block contents %}
     <h1 class="mt-5" style="text-align: center;">데이터 생성/관리</h1>
     <div class="d-flex flex-column mt-5">
         <a href="{{ url_for('common.crawl') }}" class="d-flex justify-content-center">
@@ -20,12 +32,7 @@
             <button type="button" class="btn btn-info mb-3" id="naver_place_csv_to_db_all">네이버 장소 -> db 저장</button>
         </a>
     </div>
+{% endblock %}
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-        integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
-    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
-    <script src="https://kit.fontawesome.com/76dd16220c.js" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
-</body>
-</html>
+{% block scripts %}
+{% endblock %}
