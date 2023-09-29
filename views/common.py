@@ -62,60 +62,67 @@ def place_like(place_uuid):
 
 
 @bp.route('/data-process')
-@login_required
 def data_process():
-    if current_user.username == "admin":
-        return render_template('data_process.html')
-    return render_template('404.html')
+    try:
+        if current_user.username == "admin":
+            return render_template('data_process.html')
+        return redirect(url_for('common.index'))
+    except:
+        return render_template('404.html')
 
 
 @bp.route('/crawl')
-@login_required
 def crawl():
-    if current_user.username == "admin":
-        data_processor = Data_Crawl_and_Process()
-        data_processor.get_all_area()
-        return redirect(url_for('common.data_process'))
-    return render_template('404.html')
+    try:
+        if current_user.username == "admin":
+            data_processor = Data_Crawl_and_Process()
+            data_processor.get_all_area()
+            return redirect(url_for('common.data_process'))
+        return redirect(url_for('common.index'))
+    except:
+        return render_template('404.html')
 
 @bp.route('/crawl-pub')
-@login_required
 def crawl_pub():
-    if current_user.username == "admin":
-        data_processor = Data_Crawl_and_Process()
-        data_processor.get_pub_only()
-        return redirect(url_for('common.data_process'))
-    return render_template('404.html')
+    try:
+        if current_user.username == "admin":
+            data_processor = Data_Crawl_and_Process()
+            data_processor.get_pub_only()
+            return redirect(url_for('common.data_process'))
+        return redirect(url_for('common.index'))
+    except:
+        return render_template('404.html')
 
 
 @bp.route('/save-data-to-db')
 @login_required
 def save_data_to_db():
-    if current_user.username == "admin":
-        #! db에 저장 코드
-        for dongs in dict_area_gu_to_dong.values():
-            for dong in dongs:
-                for searchtype, code in dict_searchtype_to_code.items():
-                    try:
-                        naver_place_csv_to_db(dong, code)
-                    except:
-                        print(f'{dong} {searchtype} 데이터 저장 실패')
-        return redirect(url_for('common.data_process'))
-    return render_template('404.html')
+    try:
+        if current_user.username == "admin":
+            for dongs in dict_area_gu_to_dong.values():
+                for dong in dongs:
+                    for searchtype, code in dict_searchtype_to_code.items():
+                        try:
+                            naver_place_csv_to_db(dong, code)
+                        except:
+                            print(f'{dong} {searchtype} 데이터 저장 실패')
+            return redirect(url_for('common.data_process'))
+        return redirect(url_for('common.index')) #! 로그인이 안 되어있으면
+    except: #! admin이 아니면
+        return render_template('404.html')
 
 
 @bp.route('/make-admin')
 def make_admin():
-    #! (일회용) 관리자 계정 자동 생성 코드
     isAdminExist = User.query.filter_by(username = 'admin').first()
     if not isAdminExist:
         from werkzeug.security import generate_password_hash
-        admin = User(username = 'admin', 
+        admin = User(username      = 'admin', 
                      password_hash = generate_password_hash('admin'), 
-                     nickname = 'ADMIN', 
-                     contact = '010-1234-5678',
-                     email = 'j0@naver.com',
-                     name  = '관리자')
+                     nickname      = 'ADMIN', 
+                     contact       = '010-1234-5678',
+                     email         = 'j0@naver.com',
+                     name          = '관리자')
         db.session.add(admin)
         db.session.commit()
         print('admin 회원가입 완료')
@@ -124,7 +131,6 @@ def make_admin():
 
 @bp.route('/remove-admin')
 def remove_admin():
-    #! (일회용) 관리자 계정 자동 생성 코드
     isAdminExist = User.query.filter_by(username = 'admin').first()
     if isAdminExist:
         User.query.filter_by(username = 'admin').delete()
