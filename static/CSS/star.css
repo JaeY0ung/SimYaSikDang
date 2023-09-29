@@ -6,6 +6,14 @@ body{
     justify-content: space-between;
 }
 a {
-    color: rgb(26, 118, 176);
+    color: rgb(26, 213, 51);
     text-decoration: none;
 }
+
+details summary::marker{font-size:0;}
+
+/* 
+.over-flow {
+    overflow-x: scroll;
+    overflow-y: hidden;
+} */
