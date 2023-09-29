@@ -10,10 +10,13 @@
 <body>
     <h1 class="mt-5" style="text-align: center;">데이터 생성/관리</h1>
     <div class="d-flex flex-column mt-5">
-        <a href="{{ url_for('crawl') }}" class="d-flex justify-content-center">
+        <a href="{{ url_for('common.crawl') }}" class="d-flex justify-content-center">
             <button type="button" class="btn btn-info mb-3" id="naver_place_crawler">네이버 장소 크롤링</button>
         </a>
-        <a href="{{ url_for('save_data_to_db') }}" class="d-flex justify-content-center">
+        <a href="{{ url_for('common.crawl_pub') }}" class="d-flex justify-content-center">
+            <button type="button" class="btn btn-info mb-3" id="naver_place_crawler">네이버 장소 크롤링 (술집만)</button>
+        </a>
+        <a href="{{ url_for('common.save_data_to_db') }}" class="d-flex justify-content-center">
             <button type="button" class="btn btn-info mb-3" id="naver_place_csv_to_db_all">네이버 장소 -> db 저장</button>
         </a>
     </div>

@@ -8,7 +8,7 @@
 
 {% block header %}
     <h1 class="center">
-        <a href="/sikdang" style="color: black;">
+        <a href="{{ url_for('pub.index') }}" style="color: black;">
             심야식당
         </a>
     </h1>
@@ -27,7 +27,7 @@
         <div>
             {% include 'components/table.html' %}
         </div>
-        <div style="margin-top: 9%;">
+        <div style="margin-top: 0%;">
             {% include 'components/kakao_map.html' %}
         </div>
     </div>

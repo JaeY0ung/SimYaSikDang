@@ -14,22 +14,26 @@
             <div class="mt-3">
                 <form method="get">
                     <div class="d-flex justify-content-center mt-3">
-                        <table style="height: 200px;">
+                        <table style="height: 20rem;">
                             <tr>
-                            <td>지역</td>
-                            <td>{{ area }}</td>
-                            </tr>
-                            <tr>
-                                <td>상점명</td>
+                                <td>장소</td>
                                 <td>{{ name }}</td>
                             </tr>
                             <tr>
-                                <td>사용자 이름</td>
-                                <td><input type="text" name="user_name" placeholder="사용자 이름 입력"></td>
+                                <td>주소</td>
+                                <td>{{ address }}</td>
                             </tr>
                             <tr>
-                                <td>휴대폰 번호</td>
-                                <td><input type="text" name="user_pn" placeholder="사용자 휴대폰 번호 입력" style="width: auto;"></td>
+                                <td>사용자 이름</td>
+                                <td><input type="text" name="user_name" placeholder="사용자 이름 입력" value="{{ user.name }}"></td>
+                            </tr>
+                            <tr>
+                                <td>연락처</td>
+                                <td><input type="text" name="user_pn" placeholder="휴대폰 번호" style="width: auto;" value="{{ user.phone }}"></td>
+                            </tr>
+                            <tr>
+                                <td>이메일</td>
+                                <td><input type="text" name="user_pn" placeholder="이메일" style="width: auto;" value="{{ user.email }}"></td>
                             </tr>
                             <tr>
                                 <td>신고내용</td>
