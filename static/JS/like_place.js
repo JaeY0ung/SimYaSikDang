@@ -1,6 +1,6 @@
 function moveToLogin(error){
     if (error.responseText == 'No User login'){
-        location.replace('/auth/login');
+        location.replace('/login');
     }
 }
 
