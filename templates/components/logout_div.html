@@ -1,3 +1,24 @@
-<div>
-    <a href="{{ url_for('auth.logout') }}">로그아웃하기</a>
+<div class="d-flex justify-content-between" style="height: 1.5rem;">
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-sharp fa-solid fa-user"> {{ current_user.nickname }}</i>
+                    </a>
+                    <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="{{ url_for('auth.user_info') }}">내 회원 정보</a></li>
+                    <li><a class="dropdown-item" href="{{ url_for('auth.withdraw') }}">회원 탈퇴</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">로그아웃하기</a></li>
+                    </ul>
+                </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </div>
