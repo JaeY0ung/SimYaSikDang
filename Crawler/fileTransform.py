@@ -19,18 +19,6 @@ def load_csv(csvfile):
     return data
 
 def naver_place_csv_to_db(dong, code):
-    
-    # #! (일회용) TypeCode 테이블에 정보 넣기
-    # sooljip = TypeCode.query.filter_by(type="술집").first()
-    # cafe    = TypeCode.query.filter_by(type="카페").first()
-    # if not sooljip:
-    #     sooljip_typecode = TypeCode(type="술집", code="A")
-    #     db.session.add(sooljip_typecode)
-    # if not cafe:
-    #     cafe_typecode    = TypeCode(type="카페", code="B")
-    #     db.session.add(cafe_typecode)
-    # db.session.commit()
-
     # #! (일회용) place 테이블 데이터 모두 지우기
     # Place.query.delete()
     # db.session.commit()
@@ -52,17 +40,19 @@ def naver_place_csv_to_db(dong, code):
                 naver_place_id = place['naver_place_id'],
             ).first()
             if search_place: #! db에 장소가 있으면
-                search_place.rating         = place['star_rating']
-                search_place.review_total   = place['review_total']
-                search_place.address_si     = place['address_si']
-                search_place.address_gu     = place['address_gu']
-                search_place.address_lo     = place['address_lo']
-                search_place.address_detail = place['address_detail']
-                search_place.contact        = place['contact']
-                search_place.naver_place_id = place['naver_place_id']
-                search_place.place_url      = place['place_url']
-                search_place.naver_road_url = place['naver_road_url']
-                search_place.kakao_road_url = place['kakao_road_url']
+                search_place.rating              = place['star_rating']
+                search_place.review_total        = place['review_total']
+                search_place.address_si          = place['address_si']
+                search_place.address_gu          = place['address_gu']
+                search_place.address_lo          = place['address_lo']
+                search_place.address_detail      = place['address_detail']
+                search_place.contact             = place['contact']
+                search_place.lat                 = place['lat']
+                search_place.lng                 = place['lng']
+                search_place.naver_place_id      = place['naver_place_id']
+                search_place.place_url           = place['place_url']
+                search_place.naver_road_url      = place['naver_road_url']
+                search_place.kakao_road_url      = place['kakao_road_url']
                 search_place.mon_opening_hours   = place['mon_opening_hours']
                 search_place.mon_last_order_time = place['mon_last_order_time']
                 search_place.tue_opening_hours   = place['tue_opening_hours']
@@ -77,7 +67,7 @@ def naver_place_csv_to_db(dong, code):
                 search_place.sat_last_order_time = place['sat_last_order_time']
                 search_place.sun_opening_hours   = place['sun_opening_hours']
                 search_place.sun_last_order_time = place['sun_last_order_time']
-                search_place.created_at     = place['created_at']
+                search_place.created_at          = place['created_at']
                 print(f'존재하는  장소입니다: {search_place.name} update 완료')
 
             else: #! db에 장소가 없으면

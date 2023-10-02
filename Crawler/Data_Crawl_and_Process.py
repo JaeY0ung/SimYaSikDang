@@ -19,7 +19,6 @@ class Data_Crawl_and_Process:
             csv_to_xlsx(f"./crawler/csv/{area_eng}_{type_code}.csv", f"./crawler/xlsx/{area_eng}_{type_code}.xlsx") 
         except:
             print(f'{area_kor} {type_kor} 크롤링/데이터저장 실패')
-            
         try:
             processed_data_to_csv(area_kor, type_code,
                                 f"./crawler/csv/{area_eng}_{type_code}.csv", 
@@ -43,3 +42,13 @@ class Data_Crawl_and_Process:
         for dongs in dict_area_gu_to_dong.values():
             for dong in dongs:
                 self.get_one(dong, '술집')
+
+    def get_cafe_only(self):
+        for dongs in dict_area_gu_to_dong.values():
+            for dong in dongs:
+                self.get_one(dong, '카페')
+
+    def get_restaurant_only(self):
+        for dongs in dict_area_gu_to_dong.values():
+            for dong in dongs:
+                self.get_one(dong, '식당')

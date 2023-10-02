@@ -29,7 +29,7 @@ class Place(db.Model):
     type_code            = db.Column(db.Integer, db.ForeignKey('typecode.id', ondelete='CASCADE')) 
     name                 = db.Column(db.String(64), nullable=False)
     type                 = db.Column(db.String(64), nullable=False)
-    star_rating          = db.Column(db.String(64))
+    star_rating          = db.Column(db.String(64)) # TODO : float 타입으로 바꾸기
     review_total         = db.Column(db.String(64))
     address_si           = db.Column(db.String(64), nullable=False)
     address_gu           = db.Column(db.String(64), nullable=False)

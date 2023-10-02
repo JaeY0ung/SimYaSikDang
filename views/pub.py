@@ -36,9 +36,11 @@ def index():
     page        = request.args.get('page',        default= 1, type=int)
 
     place_type_obj = TypeCode.query.filter_by(type = "술집").first()
-    #! area 필터에 사용할 지역들(구) 가져오기
+
+    # area 필터에 사용할 지역들(구) 가져오기
     areas = [i[0] for i in Place.query.with_entities(Place.address_gu).distinct().all()]
-    #! type 필터에 사용할 술집의 type들만 가져오기
+
+    # type 필터에 사용할 술집의 type들만 가져오기
     types = [i[0] for i in Place.query.filter_by(type_code = place_type_obj.id).with_entities(Place.type).distinct().all()]
 
     if area: # 지역 필터 사용 시
@@ -95,52 +97,62 @@ def index():
                         })
 
     if search: #! 검색명 입력 시 가게명으로 검색
-        place_data = [shop for shop in place_data if search in shop['name']]
+        place_data = [place for place in place_data if search in place['name']]
 
     if type: #! 장소 타입 필터 옵션 선택 시 
-        place_data = [shop for shop in place_data if type == shop['type']]
+        place_data = [place for place in place_data if type == place['type']]
 
     if timefromnow: #! 시간 필터 클릭 시 추가
         data = []
-        for shop in place_data:
-            shop_time = shop[today_yoil_eng + "_opening_hours"]
-            if shop_time in [NULL, '휴무', '정보없음', '정보 없음']:
+        for place in place_data:
+            place_time = place[today_yoil_eng + "_opening_hours"]
+            if place_time in [NULL, '휴무', '정보없음', '정보 없음']:
                 continue
-            shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
-            shop_close_time = int(shop_time[-5:-3]) * 100 + int(shop_time[-2:])
+            place_open_time  = int(place_time[:2]) * 100 + int(place_time[3:5])
+            place_close_time = int(place_time[-5:-3]) * 100 + int(place_time[-2:])
             timenow_int     = timenow[0] * 100 + timenow[1]
             #! 지금도 열고, 이따도 여는 곳들만 보여주기
-            if (shop_open_time <= timenow_int <= shop_close_time\
-                or shop_open_time <= timenow_int + 2400 <= shop_close_time)\
+            if (place_open_time <= timenow_int <= place_close_time\
+                or place_open_time <= timenow_int + 2400 <= place_close_time)\
                 and\
-                (shop_open_time <= timenow_int + timefromnow * 100 <= shop_close_time\
-                or shop_open_time <= timenow_int + timefromnow * 100 + 2400 <= shop_close_time):
-                data.append(shop)
+                (place_open_time <= timenow_int + timefromnow * 100 <= place_close_time\
+                or place_open_time <= timenow_int + timefromnow * 100 + 2400 <= place_close_time):
+                data.append(place)
         place_data = data
+    
+    # 좋아하는 플레이스 목록
+    likeplace_data =[]
+    try:
+        likeplace_ids = [i[0] for i in UserLike.query.filter_by(userid = current_user.id).with_entities(UserLike.placeid).all()]
+    except:
+        likeplace_ids = []
 
-    for shop in place_data:
-        shop_time = shop[f"{today_yoil_eng}_opening_hours"]
+    for place in place_data:
+        place_time = place[f"{today_yoil_eng}_opening_hours"]
         
-        if shop_time in [NULL, '정보없음', '정보 없음']:
-            shop['status'] = NULL
-        elif shop_time in ['휴무']:
-            shop['status'] = '휴무'
+        if place_time in [NULL, '정보없음', '정보 없음']:
+            place['status'] = NULL
+        elif place_time in ['휴무']:
+            place['status'] = '휴무'
         else:
-            shop_open_time  = int(shop_time[:2]) * 100 + int(shop_time[3:5])
-            shop_close_time = int(shop_time[-5:-3]) * 100 + int(shop_time[-2:])
+            print(f"[디버깅]: {place['address_gu']} {place['address_lo']} {place['name']} {place_time}")
+            place_open_time  = int(place_time[:2]) * 100 + int(place_time[3:5])
+            place_close_time = int(place_time[-5:-3]) * 100 + int(place_time[-2:])
             timenow_int     = timenow[0] * 100 + timenow[1]
-            # print(f'여는 시간: {shop_open_time}\n현재 시간: {timenow_int}\n닫는 시간: {shop_close_time}\nㅡㅡㅡㅡㅡㅡㅡㅡㅡ')
+            # print(f'여는 시간: {place_open_time}\n현재 시간: {timenow_int}\n닫는 시간: {place_close_time}\nㅡㅡㅡㅡㅡㅡㅡㅡㅡ')
           
-            if shop_open_time <= timenow_int <= shop_close_time:
-                shop['status'] = 'open'  # '영업 중'
+            if place_open_time <= timenow_int <= place_close_time:
+                place['status'] = 'open'  # '영업 중'
             else:
-                shop['status'] = 'close' # '영업 종료'
+                place['status'] = 'close' # '영업 종료'
 
-            if shop_close_time >= 2400:
-                shop[f"{today_yoil_eng}_opening_hours"] = shop_time[:5] + f'-{str(int(shop_time[-5:-3]) - 24):>02s}:{shop_time[-2:]}'
-                if shop_open_time <= timenow_int + 2400 <= shop_close_time:
-                    shop['status'] = 'open' #'영업 중'
-            
+            if place_close_time >= 2400:
+                place[f"{today_yoil_eng}_opening_hours"] = place_time[:5] + f'-{str(int(place_time[-5:-3]) - 24):>02s}:{place_time[-2:]}'
+                if place_open_time <= timenow_int + 2400 <= place_close_time:
+                    place['status'] = 'open' #'영업 중'
+        if place['id'] in likeplace_ids:
+            likeplace_data.append(place)
+     
     pagemaker = Pagination(place_data, page)
     
     #? 기본 정렬: 별점 순 (얘보다 좀 더 빠름 <- place_data = sorted(place_data, key = lambda x: x['star_rating'], reverse=True) )
@@ -151,6 +163,7 @@ def index():
     return render_template("pub.html", today_yoil_eng = today_yoil_eng, today_yoil_kor = today_yoil_kor, timenow = timenow, NULL = NULL,
                            areas = areas, types = types, search = search, area=area, type = type, timefromnow = timefromnow, 
                            place_data = place_data[pagemaker.start_index : pagemaker.end_index + 1],
+                           likeplace_data = likeplace_data,
                            page = page, total_page = pagemaker.total_page, 
                            pagination_start = pagemaker.pagination_start, 
                            pagination_end = pagemaker.pagination_end, 
