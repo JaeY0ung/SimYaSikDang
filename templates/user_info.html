@@ -1,0 +1,67 @@
+{% extends 'components/layout.html' %}
+
+
+{% block title %}
+    내 회원정보
+{% endblock %}
+
+
+{% block header %}
+    <h1 class="center">
+        나의 회원정보
+    </h1>
+{% endblock %}
+
+
+{% block filter %}
+{% endblock %}
+
+
+{% block contents %}
+    <form method="PUT">
+        <div class="d-flex justify-content-center mt-5">
+            <table>
+                <tr>
+                    <td>이름</td>
+                    <td><label><input type="text" name="name" placeholder="이름" value="{{ current_user.name }}" required></label></td>
+                </tr>
+                <tr>
+                    <td>닉네임</td>
+                    <td><label><input type="text" name="nickname" placeholder="닉네임" value="{{ current_user.nickname }}" required></label></td>
+                </tr>
+                <tr>
+                    <td>전화번호</td>
+                    {% if current_user.contact %}
+                        <td><label><input type="tel" name="contact" oninput="autoHyphen(this)" maxlength="13" placeholder="ex) 010-1111-1111" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="{{ current_user.contact[:3] + '-' + current_user.contact[3:7] + '-' + current_user.contact[7:] }}" required></label></td>
+                    {% else %}
+                        <td><label><input type="tel" name="contact" oninput="autoHyphen(this)" maxlength="13" placeholder="ex) 010-1111-1111" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="" required></label></td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td>인증 이메일</td>
+                    <td><label><input type="email" name="email" placeholder="ex) xxxxx@naver.com" value="{{ current_user.email }}" required></label></td>
+                </tr>
+                <tr>
+                    <td>사용할 아이디</td>
+                    <td><label><input type="text" name="username" placeholder="사용할 아이디 입력" value="{{ current_user.username }}" required></label></td>
+                </tr>
+                <tr>
+                    <td>현재 비밀번호</td>
+                    <td><label><input type="password" name="password_now" placeholder="현재 비밀번호 입력" required></label></td>
+                </tr>
+                <tr>
+                    <td>사용할 비밀번호</td>
+                    <td><label><input type="password" name="password_change" placeholder="비밀번호 재입력" required></label></td>
+                </tr>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center mt-3 gap-3">
+            <a href="/"><input type="button" class="btn btn-primary" value="취소하기"></a>
+            <input type="submit" class="btn btn-primary" value="수정하기" disabled>
+        </div>
+    </form>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/register_check.js') }}"></script>
+{% endblock %}

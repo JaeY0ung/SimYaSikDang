@@ -1,0 +1,38 @@
+{% extends 'components/layout.html' %}
+
+
+{% block title %}
+    회원 탈퇴
+{% endblock %}
+
+
+{% block header %}
+	<h1 class="mt-5" style="text-align: center;">
+		회원 탈퇴
+	</h1>
+{% endblock %}
+
+
+{% block filter %}
+{% endblock %}
+
+
+{% block contents %}
+	<button id="withdraw-button" class="btn btn-danger">
+        회원 탈퇴
+    </button>
+
+	<div id="modal" class="modal-overlay">
+        <div class="modal-window">
+			<div class="content">
+				<button type="button" class="btn btn-danger" id="withdraw-button-modal">정말로 탈퇴하시겠습니까?</button>
+				&nbsp;
+				<button type="button" class="btn-close" aria-label="Close" data-bs-theme="dark"></button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+	<script src="{{ url_for('static', filename='js/withdraw.js') }}"></script>
+{% endblock %}
