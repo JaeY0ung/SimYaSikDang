@@ -18,7 +18,10 @@ def processed_data_to_csv(area_kor, type_code, before_file, after_file):
             contact       = line['contact']
             place_url     = line["place_url"]
             created_at    = line["created_at"]
-            latlng        = naver_map_LatLng(address) # TODO : 현재는 데이터 저장할 때마다 naver_api 호출함 -> 데이터가 update 할 때만 저장하기(filetransform에서 처리)
+            try:
+                latlng    = naver_map_LatLng(address) # TODO : 현재는 데이터 저장할 때마다 naver_api 호출함 -> 데이터가 update 할 때만 저장하기(filetransform에서 처리)
+            except:
+                latlng    = ['-', '-']
             lat           = latlng[0]
             lng           = latlng[1]
 
@@ -106,7 +109,7 @@ def processed_data_to_csv(area_kor, type_code, before_file, after_file):
                         # 모든 요일 처리
                         for key in opening_hours_by_day.keys():
                             opening_hours_by_day[key] = {"opening_hours": time_info, "last_order_time": day_last_order}
-                    elif yoil[0] in ['월', '화', '수', '목', '금', '토', '일']:
+                    elif yoil[0] in ['월', '화', '수', '목', '금', '토', '일'] and len(day) <= 3: #! 낙성대 남도포장마차 예외처리
                         opening_hours_by_day[yoil[0]] = {"opening_hours": time_info, "last_order_time": day_last_order}
                 except:
                     pass
