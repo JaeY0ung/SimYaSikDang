@@ -23,7 +23,7 @@
 
 
 {% block contents %}
-    <div class="d-flex jusify-contents-center gap-5">
+    <div class="d-flex justify-content-between">
         <div>
             {% include 'components/table.html' %}
         </div>
@@ -31,8 +31,9 @@
             {% include 'components/kakao_map.html' %}
         </div>
     </div>
-
-    {% include 'components/pagination.html' %}
+    <div class="mt-3">
+        {% include 'components/pagination.html' %}
+    </div>
 {% endblock %}
 
 {% block scripts %}
@@ -40,4 +41,5 @@
     <script src="{{ url_for('static', filename='js/kakao_map.js') }}"></script>
     <script src="{{ url_for('static', filename='js/copy_text.js') }}"></script>
     <script src="{{ url_for('static', filename='js/summary_details.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/control_fontsize.js') }}"></script>
 {% endblock %}

@@ -1,29 +1,35 @@
 <div class="align-self-center">
-    <p>
-        <strong>
-            오늘은 
-            {% if today_yoil_kor in ['월'] %}
-                <span class="ingredient" style="color: rgb(24, 137, 217);">
-                    월래 마시는
-                </span>
-            {% elif today_yoil_kor in ['화'] %}
-                <span class="ingredient" style="color: crimson;">
-                    술로 화를 푸는
-                </span>
-            {% elif today_yoil_kor in ['수'] %}
-                <span class="ingredient" style="color: rgb(20, 220, 73);">
-                    🍸수울이 땡기는
-                </span>
-            {% elif today_yoil_kor in ['목'] %}
-                <span class="ingredient" style="color: rgb(15, 111, 215);">
-                    🍸목이 타는
-                </span>
-            {% elif today_yoil_kor in ['금','토','일'] %}
-                <span class="ingredient" style="color: crimson;">
-                    🔥불타는
-                </span>
-            {% endif %}
-            {{ today_yoil_kor }}요일~🍻
-        </strong>
-    </p>
+    <a href="/" style="color: black;">
+        <p>
+            <strong>
+                오늘은 
+                {% if today_yoil_kor in ['월'] %}
+                    <span class="ingredient" style="color: rgb(24, 137, 217);">
+                        월래 마시는
+                    </span>
+                {% elif today_yoil_kor in ['화'] %}
+                    <span class="ingredient" style="color: crimson;">
+                        술로 화를 푸는
+                    </span>
+                {% elif today_yoil_kor in ['수'] %}
+                    <span class="ingredient" style="color: rgb(20, 220, 73);">
+                        🍸수울이 땡기는
+                    </span>
+                {% elif today_yoil_kor in ['목'] %}
+                    <span class="ingredient" style="color: rgb(15, 111, 215);">
+                        🍸목이 타는
+                    </span>
+                {% elif today_yoil_kor in ['금','토'] %}
+                    <span class="ingredient" style="color: crimson;">
+                        🔥불타는
+                    </span>
+                {% elif today_yoil_kor in ['일'] %}
+                    <span class="ingredient" style="color: crimson;">
+                        내일 출근^^하는
+                    </span>
+                {% endif %}
+                {{ today_yoil_kor }}요일~🍻
+            </strong>
+        </p>
+    </a>
 </div>
