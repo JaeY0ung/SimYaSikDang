@@ -18,54 +18,50 @@
 
 
 {% block contents %}
-	<form method="post" class="needs-validation" style="width:70%; max-width:40rem; margin:0 auto;" novalidate>
-		<div class="form-floating mb-3 d-flex">
-			<input type="text" class="form-control min-max-width-84" name="username" id="username" placeholder="name@example.com" required>
+	<form method="post" class="needs-validation" style="width:70%; max-width:40rem; margin:0 auto;" id="register-form" novalidate>
+		<div class="form-floating mt-3 d-flex">
+			<input type="text" class="form-control " name="username" id="username" placeholder="name@example.com">
 			<label for="username" class="form-label"><span style="color: red;">(필수)</span> <span style="color: black;">사용할 아이디</span></label>
-			<button class="btn btn-outline-secondary min-max-width-15 left-margin-1" type="button" id="username-check-button">중복체크</button>
-			<div id="username-valid-feedback" class="valid-feedback center-div">입력해주세요</div>
-			<div id="username-invalid-feedback" class="invalid-feedback center-div" style="max-width: 20rem;">Rewrite!</div>
+			<button class="btn btn-outline-secondary left-margin-1" type="button" id="username-check-button" style="width:5.5rem; min-width:5.5rem; background-color:#888888; color:#FFFFFF;">중복체크</button>
+			<button class="btn btn-outline-secondary left-margin-1" type="button" id="username-use-button" style="width:5.5rem; min-width:5.5rem; background-color:#888888; color:#FFFFFF; display:none;">사용하기</button>
 		</div>
+		<div id="username-double-check-comment"></div>
 
-		<div class="form-floating mb-3 d-flex">
-			<input type="password" class="form-control min-max-width-100" name="password" id="password" placeholder="대문자, 특수문자 포함 8자 이상" required>
+		<div class="form-floating mt-3 d-flex">
+			<input type="password" class="form-control" name="password" id="password" placeholder="대문자, 특수문자 포함 8자 이상" required>
 			<label for="password" class="form-label"><span style="color: red;">(필수)</span>  <span style="color: black;">사용할 비밀번호</span></label>
-			<div id="password-invalid-feedback" class="invalid-feedback center-div"> Rewrite!</div>
 		</div>
 
-		<div class="form-floating mb-3 d-flex">
-			<input type="password" class="form-control min-max-width-100" name="password_again" id="password-again" placeholder="" required>
+		<div class="form-floating mt-3 d-flex">
+			<input type="password" class="form-control" name="password_again" id="password-again" placeholder="" required>
 			<label for="password-again" class="form-label"><span style="color: red;">(필수)</span>  <span style="color: black;">비밀번호 재입력</span></label>
-			<div id="password-again-invalid-feedback" class="invalid-feedback center-div">Rewrite!</div>
 		</div>
 
-		<div class="form-floating mb-3 d-flex">
-			<input type="text" class="form-control min-max-width-100" name="name" id="name" placeholder="홍길동" required>
+		<div class="form-floating mt-3 d-flex">
+			<input type="text" class="form-control" name="name" id="name" placeholder="홍길동" required>
 			<label for="name" class="form-label"><span style="color: red;">(필수)</span>  <span style="color: black;">이름(Full Name)</span></label>
-			<div id="name-invalid-feedback" class="invalid-feedback center-div">Rewrite!</div>
 		</div>
 
-		<div class="form-floating mb-3 d-flex">
-			<input type="text" class="form-control min-max-width-100" name="nickname" id="nickname" placeholder="gildong2" required>
+		<div class="form-floating mt-3 d-flex">
+			<input type="text" class="form-control" name="nickname" id="nickname" placeholder="gildong2" required>
 			<label for="nickname" class="form-label"><span style="color: red;">(필수)</span>  <span style="color: black;">닉네임</span></label>
-			<div id="nickname-invalid-feedback" class="invalid-feedback center-div">Rewrite!</div>
 		</div>
 
-		<div class="form-floating mb-3 d-flex">
-			<input type="email" class="form-control min-max-width-84" name="email" id="email" placeholder="xxxxx@naver.com" required>
+		<div class="form-floating mt-3 d-flex">
+			<input type="email" class="form-control" name="email" id="email" placeholder="xxxxx@naver.com" required>
 			<label for="email" class="form-label"><span style="color: red;">(필수)</span>  <span style="color: black;">이메일</span></label>
-			<button class="btn btn-outline-secondary min-max-width-15 left-margin-1" type="button" id="email-check-button">중복체크</button>
-			<div id="email-valid-feedback" class="valid-feedback center-div">Good</div>
-			<div id="email-invalid-feedback" class="invalid-feedback center-div">Rewrite!</div>
+			<button class="btn btn-outline-secondary left-margin-1" type="button" id="email-check-button" style="width:5.5rem; min-width:5.5rem; background-color:#888888; color:#FFFFFF;">중복체크</button>
+			<button class="btn btn-outline-secondary left-margin-1" type="button" id="email-use-button" style="width:5.5rem; min-width:5.5rem; background-color:#888888; color:#FFFFFF; display:none;">사용하기</button>
 		</div>
+		<div id="email-double-check-comment"></div>
 	
-		<div class="form-floating mb-3 d-flex">
-			<input type="tel" class="form-control min-max-width-100" name="contact" id="contact" placeholder="010-1111-2222" oninput="autoHyphen(this)" maxlength="13" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
+		<div class="form-floating mt-3 d-flex">
+			<input type="tel" class="form-control" name="contact" id="contact" placeholder="010-1111-2222" oninput="autoHyphen(this)" maxlength="13" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
 			<label for="contact" class="form-label"><span style="color: blue;">(선택)</span>  <span style="color: black;">전화번호</span></label>
-			<div id="contact-invalid-feedback" class="invalid-feedback center-div">Rewrite!</div>
 		</div>
 
-		<input type="submit" value="submit">
+		<input type="submit" value="가입하기" class="btn mt-3" style="background-color:#0ea245; color:#FFFFFF; width:5.5rem;">
+		<div id="submit-check-comment"></div>
 	</form>
 {% endblock %}
 
