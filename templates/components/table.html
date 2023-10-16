@@ -50,7 +50,7 @@
                             {{ place[today_yoil_eng + "_opening_hours"] }}
                         </td>
                         <td>
-                            <a id="address" data-lat="{{ place.lat }}" data-lng="{{ place.lng }}" data-name="{{ place.name }}" data-placeurl="{{ place.place_url }}" data-roadurl="{{ place.kakao_road_url }}" href="{{ place.kakao_road_url }}" target="_blank">
+                            <a id="address" data-lat="{{ place.lat }}" data-lng="{{ place.lng }}" data-name="{{ place.name }}" data-placeurl="https://map.naver.com/p/entry/place/{{ place.naver_place_id }}?c=15.00,0,0,0,dh" data-roadurl="{{ place.kakao_road_url }}" href="{{ place.kakao_road_url }}" target="_blank">
                                 {% if place.address | length > 8 %}
                                     {{ place.address[3:8] }}..
                                 {% else %}
@@ -123,7 +123,7 @@
                             {{ place[today_yoil_eng + "_opening_hours"] }}
                         </td>
                         <td>
-                            <a id="address" data-lat="{{ place.lat }}" data-lng="{{ place.lng }}" data-name="{{ place.name }}" data-placeurl="{{ place.place_url }}" data-roadurl="{{ place.kakao_road_url }}" href="{{ place.kakao_road_url }}" target="_blank">
+                            <a id="address" data-lat="{{ place.lat }}" data-lng="{{ place.lng }}" data-name="{{ place.name }}" data-placeurl="https://map.naver.com/p/entry/place/{{ place.naver_place_id }}?c=15.00,0,0,0,dh" data-roadurl="{{ place.kakao_road_url }}" href="{{ place.kakao_road_url }}" target="_blank">
                                 {% if place.address | length > 8 %}
                                     {{ place.address[3:8] }}..
                                 {% else %}
