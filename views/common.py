@@ -63,77 +63,61 @@ def singo():
 
 @bp.route('/data-process')
 def data_process():
-    try:
-        if current_user.username == "admin":
-            return render_template('data_process.html')
-        return redirect(url_for('common.index'))
-    except:
+    if not current_user.is_authenticated or current_user.username != "admin":
         return render_template('404.html')
-
+    return render_template('data_process.html')
+     
 
 @bp.route('/crawl')
 def crawl():
-    try:
-        if current_user.username == "admin":
-            data_processor = Data_Crawl_and_Process()
-            data_processor.get_all_area()
-            return redirect(url_for('common.data_process'))
-        return redirect(url_for('common.index'))
-    except:
+    if not current_user.is_authenticated or current_user.username != "admin":
         return render_template('404.html')
+    data_processor = Data_Crawl_and_Process()
+    data_processor.get_all_area()
+    return redirect(url_for('common.data_process'))
 
 
 @bp.route('/crawl-one')
 def crawl_one():
-    try:
-        if current_user.username == "admin":
-            data_processor = Data_Crawl_and_Process()
-            data_processor.get_one('경포동', '술집')
-            return redirect(url_for('common.data_process'))
-        return redirect(url_for('common.index'))
-    except:
+    if not current_user.is_authenticated or current_user.username != "admin":
         return render_template('404.html')
+    data_processor = Data_Crawl_and_Process()
+    data_processor.get_one('경포동', '술집')
+    return redirect(url_for('common.data_process'))
 
 
 @bp.route('/crawl-pub')
 def crawl_pub():
-    try:
-        if current_user.username == "admin":
-            data_processor = Data_Crawl_and_Process()
-            data_processor.get_pub_only()
-            return redirect(url_for('common.data_process'))
-        return redirect(url_for('common.index'))
-    except:
-        return render_template('404.html')
-    
+    if not current_user.is_authenticated or current_user.username != "admin":
+        return render_template('404.html')   
+    data_processor = Data_Crawl_and_Process()
+    data_processor.get_pub_only()
+    return redirect(url_for('common.data_process'))
+
 
 @bp.route('/crawl-restaurant')
 def crawl_restaurant():
-    try:
-        if current_user.username == "admin":
-            data_processor = Data_Crawl_and_Process()
-            data_processor.get_restaurant_only()
-            return redirect(url_for('common.data_process'))
-        return redirect(url_for('common.index'))
-    except:
+    if not current_user.is_authenticated or current_user.username != "admin":
         return render_template('404.html')
-
+    data_processor = Data_Crawl_and_Process()
+    data_processor.get_restaurant_only()
+    return redirect(url_for('common.data_process'))
+ 
 
 @bp.route('/save-data-to-db')
 def save_data_to_db():
-    try:
-        if current_user.username == "admin":
-            for dongs in dict_area_gu_to_dong.values():
-                for dong in dongs:
-                    for searchtype, code in dict_searchtype_to_code.items():
-                        try:
-                            naver_place_csv_to_db(dong, code)
-                        except:
-                            print(f'{dong} {searchtype} 데이터 저장 실패')
-            return redirect(url_for('common.data_process'))
-        return redirect(url_for('common.index')) #! 로그인이 안 되어있으면
-    except: #! admin이 아니면
+    if not current_user.is_authenticated or current_user.username != "admin":
         return render_template('404.html')
+    
+    for dongs in dict_area_gu_to_dong.values():
+        for dong in dongs:
+            for searchtype, code in dict_searchtype_to_code.items():
+                try:
+                    naver_place_csv_to_db(dong, code)
+                except:
+                    print(f'{dong} {searchtype} 데이터 저장 실패')
+    return redirect(url_for('common.data_process'))
+
     
 @bp.route('/make-typecode')
 def make_typecode():
