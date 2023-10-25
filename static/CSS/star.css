@@ -14,13 +14,6 @@ a {
 
 details summary::marker{font-size:0;}
 
-/* 
-.over-flow {
-    overflow-x: scroll;
-    overflow-y: hidden;
-} */
-
-
 .center-div {
     flex-direction: column;
     justify-content: center;
@@ -53,6 +46,7 @@ details summary::marker{font-size:0;}
     margin-left: 1%;
 }
 
+/* 회원탈퇴 오버레이 */
 .modal-overlay {
     width: 100%;
     height: 100%;
@@ -70,7 +64,6 @@ details summary::marker{font-size:0;}
     border-radius: 10px;
     border: 1px solid rgba(255, 255, 255, 0.18);
 }
-
 .modal-window {
     background: rgba(206, 19, 85, 0.7);
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
@@ -81,17 +74,49 @@ details summary::marker{font-size:0;}
     position: relative;
     padding: 10px;
 }
-
 .title {
     padding-left: 10px;
     display: inline;
     text-shadow: 1px 1px 2px gray;
     color: white;
 }
-
 .content {
     margin-top: 20px;
     padding: 0px 10px 25px 25px;
     text-shadow: 1px 1px 2px gray;
     color: white;
 }
+
+/* 기본: 라이트 모드 */
+.themed {
+    display: block;
+    background: white;
+    color: black;
+}
+/* 시스템이 라이트모드인지 확인 */
+@media (prefers-color-scheme: light) {
+    .themed {
+        display: block;
+        background: white;
+        color: black;
+    }
+    a {
+        color: black;
+        text-decoration: none;
+    }
+}
+/* @media (prefers-color-scheme: dark) {
+    .themed {
+        display: block;
+        background: rgb(71, 68, 68);
+        color: white;
+    }
+    a {
+        color: white;
+        text-decoration: none;
+    }
+    table {
+        color: white;
+        background: rgb(71, 68, 68);
+    }
+} */
