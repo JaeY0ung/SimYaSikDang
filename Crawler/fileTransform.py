@@ -1,6 +1,6 @@
 import pandas as pd
 import csv
-from crawler.constant import dict_area_kor_to_eng
+from constant import dict_area_kor_to_eng
 from models import Place, TypeCode, db
 import uuid
 
@@ -39,7 +39,8 @@ def naver_place_csv_to_db(dong, code):
                 type_code      = int(typecode_obj.id),
                 naver_place_id = place['naver_place_id'],
             ).first()
-            if search_place: #! db에 장소가 있으면
+            if search_place: # db에 장소가 있으면
+                # 향후 type, place_url, naver_road_url, kakao_road_url은 바꾸지 않는다.
                 search_place.rating              = place['star_rating']
                 search_place.review_total        = place['review_total']
                 search_place.address_si          = place['address_si']

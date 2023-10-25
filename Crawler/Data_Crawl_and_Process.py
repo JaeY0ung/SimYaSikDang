@@ -1,7 +1,7 @@
 from crawler.crawler import NaverCrawler
 from crawler.fileTransform import csv_to_xlsx
 from crawler.dataProcesing import processed_data_to_csv
-from crawler.constant import dict_area_gu_to_dong, dict_area_kor_to_eng, dict_searchtype_to_code
+from constant import dict_area_gu_to_dong, dict_area_kor_to_eng, dict_searchtype_to_code
 from datetime import datetime
 import time
 

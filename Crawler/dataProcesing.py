@@ -1,5 +1,5 @@
 import csv
-from crawler.constant import dict_area_kor_to_eng, NULL
+from constant import dict_area_kor_to_eng, NULL
 from crawler.naver_api import naver_map_LatLng
 
 def processed_data_to_csv(area_kor, type_code, before_file, after_file):

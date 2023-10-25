@@ -6,7 +6,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 import time
 import csv
-from crawler.constant import area_k_to_e, NULL, set_csvfile_name
+from constant import area_k_to_e, NULL, set_csvfile_name
 
 #? 페이지의 맨 밑까지 스크롤 (맥 + 34인치 모니터 기준/ 한페이지에 55개 상점 정보)
 def scroll_down(crawler):
