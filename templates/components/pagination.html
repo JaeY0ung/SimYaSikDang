@@ -1,11 +1,11 @@
 <nav aria-label="Page navigation example">
     <ul class="pagination" style="justify-content : center;">
         {% if move_page_front %}
-            <li class="page-item"><a class="page-link" href="{{ url_for('pub.index') }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ 1 }}"><span aria-hidden="true">&laquo;&laquo;</span></a></li>
-            <li class="page-item"><a class="page-link" href="{{ url_for('pub.index') }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ page-5 }}"><span aria-hidden="true">&laquo;</span></a></li>
+            <li class="page-item"><a class="page-link" href="{{ url_for(url) }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ 1 }}"><span aria-hidden="true">&laquo;&laquo;</span></a></li>
+            <li class="page-item"><a class="page-link" href="{{ url_for(url) }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ page-5 }}"><span aria-hidden="true">&laquo;</span></a></li>
         {% endif %}
         {% for p in range(pagination_start, pagination_end+1) %}
-            <li class="page-item"><a class="page-link" href="{{ url_for('pub.index') }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ p }}">
+            <li class="page-item"><a class="page-link" href="{{ url_for(url) }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ p }}">
                 {% if page == p %}
                     <strong><mark>
                         {% endif %}
@@ -16,8 +16,8 @@
             </a></li>
         {% endfor %}
         {% if move_page_back %}
-            <li class="page-item"><a class="page-link" href="{{ url_for('pub.index') }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ page+5 }}"><span aria-hidden="true">&raquo;</span></a></li>
-            <li class="page-item"><a class="page-link" href="{{ url_for('pub.index') }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ total_page }}"><span aria-hidden="true">&raquo;&raquo;</span></a></li>
+            <li class="page-item"><a class="page-link" href="{{ url_for(url) }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ page+5 }}"><span aria-hidden="true">&raquo;</span></a></li>
+            <li class="page-item"><a class="page-link" href="{{ url_for(url) }}?search={{ search }}&area={{ area }}&type={{ type }}&timefromnow={{ timefromnow }}&page={{ total_page }}"><span aria-hidden="true">&raquo;&raquo;</span></a></li>
         {% endif %}
     </ul>
 </nav>

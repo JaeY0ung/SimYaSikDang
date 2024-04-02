@@ -7,7 +7,7 @@ from selenium.webdriver.chrome.options import Options
 import time
 from datetime import datetime
 import csv
-from .constant import dict_area_kor_to_eng, dict_searchtype_to_code, NULL
+from constant import dict_area_kor_to_eng, dict_searchtype_to_code, NULL
 
 
 class NaverCrawler:

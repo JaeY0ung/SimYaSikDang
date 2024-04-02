@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", function() {
   //!=========================================================
   nicknameInput.addEventListener('input', (e) => {
     const nickname = nicknameInput.value;
-    if (email) { // 사용할 이메일 입력시에만 요청 보냄
+    if (nickname) { // 사용할 이메일 입력시에만 요청 보냄
       $.ajax({
         url: `/auth/check?nickname=${nickname}`,
         method: 'GET',
@@ -226,8 +226,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }else if(!validationChecks.contact){
       submitComment.textContent = '연락처를 확인하세요';
       event.preventDefault();
-    }else{
-      
     }
   })
 });

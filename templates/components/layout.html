@@ -13,16 +13,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/star.css')  }}">
 </head>
     
-<body>
+<body class="themed">
     <div style="width: 95%; margin:0 auto;">
         {% block auth_bar %}
             <div class="d-flex justify-content-between mt-3">
                 {% include 'components/today_description_div.html' %}
 
                 {% if current_user.is_authenticated %}
-                    {% include 'components/logout_div.html' %}
+                    {% include 'components/authenticated_upper_bar.html' %}
                 {% else %}
-                    {% include 'components/login_register_div.html' %}
+                    {% include 'components/unauthenticated_upper_bar.html' %}
                 {% endif %}
             </div>
         {% endblock %}

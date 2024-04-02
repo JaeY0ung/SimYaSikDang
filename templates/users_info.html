@@ -1,0 +1,77 @@
+{% extends 'components/layout.html' %}
+
+{% block title %}
+    회원관리
+{% endblock %}
+
+{% block header %}
+    <h1 class="center">
+        회원관리
+    </h1>
+{% endblock %}
+
+{% block filter %}
+{% endblock %}
+
+{% block contents %}
+    <table class="table table-bordered" style="height: 100%;">
+        <tr style="height: 100%;">
+            <th scope="col">id</th>
+            <th scope="col">아이디</th>
+            <th scope="col">이름</th>
+            <th scope="col">닉네임</th>
+            <th scope="col">이메일</th>
+            <th scope="col">연락처</th>
+            <th scope="col">삭제</th>
+
+        </tr>
+        <tbody class="table-group-divider">
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.nickname }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        {% if user.contact %}
+                           {{ user.contact[:3] + '-' + user.contact[3:7] + '-' + user.contact[7:] }}
+                        {% endif %}
+                    </td>
+                    {% if user.username != 'admin' %}
+                        <td style="color: red; cursor:pointer;"><span class="withdraw" data-userid="{{ user.id }}">삭제하기</span></td>
+                    {% else %}
+                        <td style="color: black;"><span>삭제못해</span></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const withdraws = document.querySelectorAll('.withdraw');
+        withdraws.forEach((withdraw) => {
+            withdraw.addEventListener('click', (event) => {
+                userId = withdraw.dataset.userid;
+                fetch('/auth/withdraw', {
+                    method: 'DELETE',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body:JSON.stringify({
+                        title: "Delete User",
+                        body: "Delete User",
+                        userId: userId 
+                    })
+                })
+                .then((response) => {
+                    console.log("response:", response);
+                    location.replace('/auth/users-info')
+                })
+                .then((error) => console.log("error:", error))
+            })
+        })
+    </script>
+{% endblock %}

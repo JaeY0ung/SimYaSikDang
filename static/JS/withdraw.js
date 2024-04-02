@@ -19,7 +19,7 @@ modal.addEventListener("click", e => {
 })
 
 withdrawButtonModal.addEventListener('click' , (e) => {
-    fetch('/withdraw', {
+    fetch('/auth/withdraw', {
         method: 'DELETE',
         headers: {
             "Content-Type": "application/json"
@@ -33,5 +33,5 @@ withdrawButtonModal.addEventListener('click' , (e) => {
         location.replace('/');
         console.log("response:", response);
     })
-    .then((error) => console.log("error:", error))
+    .catch((error) => console.log("error:", error))
 });

@@ -18,50 +18,58 @@
 
 
 {% block contents %}
-    <form method="PUT">
-        <div class="d-flex justify-content-center mt-5">
-            <table>
-                <tr>
-                    <td>이름</td>
-                    <td><label><input type="text" name="name" placeholder="이름" value="{{ current_user.name }}" required></label></td>
-                </tr>
-                <tr>
-                    <td>닉네임</td>
-                    <td><label><input type="text" name="nickname" placeholder="닉네임" value="{{ current_user.nickname }}" required></label></td>
-                </tr>
-                <tr>
-                    <td>전화번호</td>
-                    {% if current_user.contact %}
-                        <td><label><input type="tel" name="contact" oninput="autoHyphen(this)" maxlength="13" placeholder="ex) 010-1111-1111" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="{{ current_user.contact[:3] + '-' + current_user.contact[3:7] + '-' + current_user.contact[7:] }}" required></label></td>
-                    {% else %}
-                        <td><label><input type="tel" name="contact" oninput="autoHyphen(this)" maxlength="13" placeholder="ex) 010-1111-1111" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}" value="" required></label></td>
-                    {% endif %}
-                </tr>
-                <tr>
-                    <td>인증 이메일</td>
-                    <td><label><input type="email" name="email" placeholder="ex) xxxxx@naver.com" value="{{ current_user.email }}" required></label></td>
-                </tr>
-                <tr>
-                    <td>사용할 아이디</td>
-                    <td><label><input type="text" name="username" placeholder="사용할 아이디 입력" value="{{ current_user.username }}" required></label></td>
-                </tr>
-                <tr>
-                    <td>현재 비밀번호</td>
-                    <td><label><input type="password" name="password_now" placeholder="현재 비밀번호 입력" required></label></td>
-                </tr>
-                <tr>
-                    <td>사용할 비밀번호</td>
-                    <td><label><input type="password" name="password_change" placeholder="비밀번호 재입력" required></label></td>
-                </tr>
-            </table>
+    <form class="needs-validation" style="width:70%; max-width:40rem; margin:0 auto;" id="register-form" novalidate>
+        <div class="form-floating mt-3 d-flex">
+            <input type="text" class="form-control" name="name" id="name" value="{{ current_user.name }}" required readonly>
+            <label for="name" class="form-label"><span style="color: black;">이름(Full Name)</span></label>
         </div>
-        <div class="d-flex justify-content-center mt-3 gap-3">
-            <a href="/"><input type="button" class="btn btn-primary" value="취소하기"></a>
-            <input type="submit" class="btn btn-primary" value="수정하기" disabled>
+        <div id="name-comment"></div>
+
+        <div class="form-floating mt-3 d-flex">
+            <input type="text" class="form-control " name="username" value="{{ current_user.username }}" id="username" readonly>
+            <label for="username" class="form-label"><span style="color: black;">아이디 (3자 ~ 20자)</span></label>
         </div>
+        <div id="username-comment"></div>
+
+        <div class="form-floating mt-3 d-flex">
+            <input type="text" class="form-control" name="nickname" id="nickname" value="{{ current_user.nickname }}" required>
+            <label for="nickname" class="form-label"><span style="color: black;">닉네임 (8자 이하)</span></label>
+        </div>
+        <div id="nickname-comment"></div>
+
+        <div class="form-floating mt-3 d-flex">
+            {% if current_user.contact %}
+                <input type="tel" class="form-control" name="contact" id="contact" value="{{ current_user.contact[:3] + '-' + current_user.contact[3:7] + '-' + current_user.contact[7:] }}" maxlength="13" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
+            {% else %}
+                <input type="tel" class="form-control" name="contact" id="contact" maxlength="13" pattern="[0-9]{3}-[0-9]{4}-[0-9]{4}">
+            {% endif %}
+            <label for="contact" class="form-label"><span style="color: blue;">(선택)</span>  <span style="color: black;">전화번호</span></label>
+        </div>
+        <div id="contact-comment"></div>
+
+        <div class="form-floating mt-3 d-flex">
+            <input type="email" class="form-control" value="{{ current_user.email }}" name="email" id="email" required>
+            <label for="email" class="form-label"> <span style="color: black;">이메일</span></label>
+        </div>
+        <div id="email-comment"></div>
+
+        <div class="form-floating mt-3 d-flex">
+            <input type="password" class="form-control" name="password" id="password" required>
+            <label for="password" class="form-label"><span style="color: black;">현재 비밀번호</span></label>
+        </div>
+        <div id="password-comment"></div>
+
+        <div class="form-floating mt-3 d-flex">
+            <input type="password" class="form-control" name="password-new" id="password-new" required>
+            <label for="password-new" class="form-label"><span style="color: black;">변경할 비밀번호</span></label>
+        </div>
+        <div id="password-new-comment"></div>
+
+        <input type="submit" value="수정하기" id="submit" class="btn mt-3" style="background-color:#0ea245; color:#FFFFFF; width:5.5rem;">
+        <div id="submit-comment"></div>
     </form>
 {% endblock %}
 
 {% block scripts %}
-    <script src="{{ url_for('static', filename='js/register_check.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modify_check.js') }}"></script>
 {% endblock %}

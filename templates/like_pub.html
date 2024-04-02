@@ -1,0 +1,43 @@
+{% extends 'components/layout.html' %}
+
+
+{% block title %}
+    심야식당 좋아하는 장소
+{% endblock %}
+
+
+{% block header %}
+    <h1 class="center">
+        <a href="{{ url_for('pub.index') }}" style="color: black;">
+            심야식당
+        </a>
+    </h1>
+{% endblock %}
+
+
+{% block filter %}
+    {% include 'components/filter.html' %}
+{% endblock %}
+
+
+{% block contents %}
+    <div class="d-flex justify-content-between">
+        <div>
+            {% include 'components/like_table.html' %}
+        </div>
+        <div style="width:28.5rem; height:28.5rem;">
+            {% include 'components/kakao_map.html' %}
+        </div>
+    </div>
+    <div class="mt-3">
+        {% include 'components/pagination.html' %}
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/like_place.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/kakao_map.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/copy_text.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/summary_details.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/control_fontsize.js') }}"></script>
+{% endblock %}

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 from crawler.fileTransform import naver_place_csv_to_db
-from crawler.constant import dict_area_gu_to_dong, dict_searchtype_to_code
+from constant import dict_area_gu_to_dong, dict_searchtype_to_code
 from crawler.Data_Crawl_and_Process import Data_Crawl_and_Process
 from models import db, User, UserLike, Place, TypeCode
 from datetime import datetime
@@ -15,7 +15,7 @@ def index():
 
 @bp.route('/place/<place_uuid>/like' , methods=["GET", "POST", "DELETE"])
 def place_like(place_uuid):
-    try: #! 로그인한 유저가 있으면
+    if current_user.is_authenticated: #! 로그인한 유저가 있으면
         if request.method == "POST":
             place = Place.query.filter_by(uuid = place_uuid).first()
             
@@ -31,7 +31,6 @@ def place_like(place_uuid):
             else:
                 return 'Resource not posted (already exist)', 404
 
-
         elif request.method == "DELETE":
             place = Place.query.filter_by(uuid = place_uuid).first()
             user_like_obj_exist = UserLike.query.filter_by(userid = current_user.id,
@@ -45,10 +44,8 @@ def place_like(place_uuid):
             
         return 'Nothing TO DO', 404
         
-    except Exception as e: #! 로그인한 유저가 없으면
-        print('[디버깅] error:', e)
+    else: #! 로그인한 유저가 없으면
         return 'No User login', 403
-        return redirect(url_for('auth.login'))
     
     
 @bp.route('/singo')

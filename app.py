@@ -3,7 +3,8 @@ from flask import Flask, render_template, request, redirect, url_for
 from flask_migrate import Migrate
 # from pagination import Pagination
 # from crawler.fileTransform import load_csv, naver_place_csv_to_db
-from crawler.constant import dict_area_gu_to_dong, dict_searchtype_to_code, SECRET_KEY, NULL
+from constant import dict_area_gu_to_dong, dict_searchtype_to_code, NULL
+from secret import SECRET_KEY
 # from crawler.Data_Crawl_and_Process import Data_Crawl_and_Process
 from models import db, User, UserLike, Place, TypeCode
 from secret import KAKAO_JAVASCRIPT_KEY, GMAIL_PASSWORD, GMAIL_ID

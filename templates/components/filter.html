@@ -1,58 +1,64 @@
-<div class="d-flex justify-content-start">
-    <!--? 지역 필터 -->
-    {% if search %}
-        <input type="text" name="search" value="{{ search }}" style="width: 100px; height: 30px; margin-top: 4px">
-    {% else %}
-        <input type="text" name="search" placeholder="상점명 입력" style="width: 100px; height: 30px; margin-top: 4px">
-    {% endif %}
-    <select name="area" class="mx-1" style="width: 100px; height: 30px; margin-top: 4px">
-        <div>
+<form method="get">
+    <div class="d-flex justify-content-start">
+        {% if search %}
+        <input type="text" name="search" value="{{ search }}" class="mx-1"
+            style="width: 18rem; height: 3rem; margin-top: 0.4rem;">
+        {% else %}
+        <input type="text" name="search" placeholder="상점명 입력" class="mx-1"
+            style="width: 18rem; height: 3rem; margin-top: 0.4rem;">
+        {% endif %}
+
+        <select name="area" class="mx-1" style="width: 6rem; height: 3rem; margin-top: 0.4rem;">
             {% if area %}
-                <option value="{{ area }}" selected hidden>{{ area }}</option>
+            <option value="{{ area }}" selected hidden>{{ area }}</option>
             {% else %}
-                <option value="" selected disabled hidden>지역 선택</option>
+            <option value="" selected disabled>지역</option>
             {% endif %}
-        </div>
-        <div>
             <option value="">전체</option>
-            {% for i in areas %}
-                <option value="{{ i }}">{{ i }}</option>
-            {% endfor %}
-        </div>
-    </select>
-    <!-- TODO: multiple 속성 넣기  -->
-    <!--? 타입 필터 -->
-    <select name="type" style="width: 100px; height: 30px; margin-top: 4px">
-        <div>
-            {% if type %}
-                <!-- disabled 속성을 제거하여 클릭하지 않아도 계속해서 값을 이것으로 가지도록 함) -->
-                <option value="{{ type }}" selected hidden>{{ type }}</option>
+            {% for a in areas %}
+            {% if a == area %}
+            <option value="{{ a }}" selected>{{ a }}</option>
             {% else %}
-                <option value="{{ type }}" selected disabled hidden>가게 종류</option>
+            <option value="{{ a }}">{{ a }}</option>
             {% endif %}
-        </div>
-        <div>
+            {% endfor %}
+        </select>
+
+        <!-- TODO: multiple 속성 넣기  -->
+        <!--? 타입 필터 -->
+        <select name="type" class="mx-1" style="width: 10rem; height: 3rem; margin-top: 0.4rem;">
+            {% if type %}
+            <option value="{{ type }}" selected hidden>{{ type }}</option>
+            {% else %}
+            <option value="{{ type }}" selected disabled>가게 종류</option>
+            {% endif %}
             <option value="">전체</option>
             {% for t in types %}
-                <option value="{{ t }}">{{ t }}</option>
-            {% endfor %}
-        </div>
-    </select>
-    <!--? 시간 필터 -->
-    <select name="timefromnow" style="width: 120px; height: 30px; margin-top: 4px">
-        <div>
-            {% if timefromnow %}
-                <option value="{{ timefromnow }}" selected hidden>{{ timefromnow }}시간 이상</option>
+            {% if type == t %}
+            <option value="{{ t }}" selected>{{ t }}</option>
             {% else %}
-                <option value="" selected disabled hidden>남은 영업시간</option>
+            <option value="{{ t }}">{{ t }}</option>
             {% endif %}
-        </div>
-        <div>
+            {% endfor %}
+
+        </select>
+        <!--? 시간 필터 -->
+        <select name="timefromnow" class="mx-1" style="width: 8rem; height: 3rem; margin-top: 0.4rem;">
+            {% if timefromnow %}
+            <option value="{{ timefromnow }}" selected hidden>{{ timefromnow }}시간 이상</option>
+            {% else %}
+            <option value="" selected disabled>남은 영업시간</option>
+            {% endif %}
+
             <option value="">전체</option>
             {% for t in [[2, '2시간 이상'], [3, '3시간 이상'], [4, '4시간 이상'], [6, '6시간 이상']] %}
-                <option value="{{ t[0] }}">{{ t[1] }}</option>
+            {% if timefromnow == t[0] %}
+            <option value="{{ t[0] }}" selected>{{ t[1] }}</option>
+            {% else %}
+            <option value="{{ t[0] }}">{{ t[1] }}</option>
+            {% endif %}
             {% endfor %}
-        </div>
-    </select>
-    <input type="submit" value="이동" class="btn btn-primary mx-1" >
-</div>
+        </select>
+        <input type="submit" value="이동" class="btn btn-primary" style="height: 3rem; margin-top: 0.4rem;">
+    </div>
+</form>

@@ -7,6 +7,7 @@
 
 
 {% block header %}
+    <h1 class="mt-5" style="text-align: center;">로그인</h1>
 {% endblock %}
 
 
@@ -15,23 +16,6 @@
 
 
 {% block contents %}
-    <h1 class="mt-5" style="text-align: center;">로그인</h1>
-    <!-- <form action="{{ url_for('auth.login') }}" method="post">
-        <div class="d-flex justify-content-center mt-5">
-            <table>
-                <tr>
-                    <td>아이디</td>
-                    <td><label><input type="text" name="username" placeholder="아이디 입력" required></label></td>
-                </tr>
-                <tr>
-                    <td>비밀번호</td>
-                    <td><label><input type="password" name="password" placeholder="비밀번호 입력" required></label></td>
-                </tr>
-            </table>
-            <input type="submit" value="submit">
-        </div>
-    </form> -->
-
     <form action="{{ url_for('auth.login') }}" method="post" class="needs-validation" style="width:70%; max-width:40rem; margin:0 auto;" novalidate>
         <div class="d-flex flex-column mt-5 min-max-width-84" style="margin:0 auto;">
             <div class="form-floating mb-3 d-flex">
@@ -50,7 +34,9 @@
     <div class="mt-3">
         <a href="{{ url_for('auth.register') }}">회원가입</a>
         &nbsp;|&nbsp;
-        <a href="{{ url_for('auth.user_info') }}">아이디/비밀번호 찾기</a>
+        <a href="{{ url_for('auth.find_info', find_type = 'username') }}">아이디 찾기</a>
+        &nbsp;|&nbsp;
+        <a href="{{ url_for('auth.find_info', find_type = 'password') }}">비밀번호 찾기</a>
     </div>
     <div class="mt-1">
         <a href="{{ url_for('common.index') }}">회원가입 없이 사용할래요!</a>

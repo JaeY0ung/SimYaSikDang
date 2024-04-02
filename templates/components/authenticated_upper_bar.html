@@ -1,0 +1,12 @@
+<div class="dropdown">
+    <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="background-color: transparent; border:none;">
+        <i class="fa-sharp fa-solid fa-user"> {{ current_user.nickname }}</i>
+    </button>
+    <ul class="dropdown-menu">
+      <li><a class="dropdown-item" href="{{ url_for('pub.like_places') }}">내가 좋아하는 장소</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('auth.user_info') }}">내 회원 정보</a></li>
+      <li><a class="dropdown-item" href="{{ url_for('auth.withdraw') }}">회원 탈퇴</a></li>
+      <li><hr class="dropdown-divider"></li>
+      <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">로그아웃하기</a></li>
+    </ul>
+</div>

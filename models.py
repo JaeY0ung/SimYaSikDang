@@ -14,7 +14,7 @@ class User(UserMixin, db.Model):
     email         = db.Column(db.String(64), unique = True)
     name          = db.Column(db.String(64))
     user_like     = db.relationship('UserLike', backref=db.backref('user')) #? 잘 모름
-    singo_place   = db.relationship('SingoPlace', backref=db.backref('user')) #? 잘 모름
+    singo         = db.relationship('Singo', backref=db.backref('user')) #? 잘 모름
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -58,7 +58,7 @@ class Place(db.Model):
     sun_last_order_time  = db.Column(db.String(64))
     created_at           = db.Column(db.String(64))
     user_like            = db.relationship('UserLike', backref=db.backref('place')) #? 잘 모름
-    singo_place          = db.relationship('SingoPlace', backref=db.backref('place')) #? 잘 모름
+    singo                = db.relationship('Singo', backref=db.backref('place')) #? 잘 모름
 
     def __repr__(self):
         return f'<Place({self.id}) 지역:{self.address_si}, 이름:{self.name}, 가게종류:{self.type}, 별점:{self.star_rating}, 리뷰수:{self.review_total}, 연락처:{self.contact}>'
@@ -82,8 +82,8 @@ class TypeCode(db.Model):
     def __repr__(self):
         return f'<TypeCode({self.id}) type:{self.type}, code:{self.code}>'
     
-class SingoPlace(db.Model):
-    __tablename__ = 'singoplace'
+class Singo(db.Model):
+    __tablename__ = 'singo'
     id            = db.Column(db.Integer, primary_key = True)
     userid        = db.Column(db.Integer, db.ForeignKey('user.id',  ondelete='CASCADE'), nullable = True) # TODO : cascade 옵션 바꿔야 함
     placeid       = db.Column(db.Integer, db.ForeignKey('place.id', ondelete='CASCADE'), nullable = False)
@@ -91,4 +91,4 @@ class SingoPlace(db.Model):
     email         = db.Column(db.String(64))
 
     def __repr__(self):
-        return f'<SingoPlace({self.id}) user:{self.userid}, place:{self.placeid}>'
+        return f'<Singo({self.id}) user:{self.userid}, place:{self.placeid}>'
