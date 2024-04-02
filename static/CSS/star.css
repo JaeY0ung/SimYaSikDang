@@ -8,7 +8,7 @@ body{
     justify-content: space-between;
 }
 a {
-    color: black;
+    color: white;
     text-decoration: none;
 }
 
@@ -87,36 +87,11 @@ details summary::marker{font-size:0;}
     color: white;
 }
 
-/* 기본: 라이트 모드 */
 .themed {
     display: block;
-    background: white;
-    color: black;
+    background: rgb(3, 5, 42);
+    color: white;
 }
-/* 시스템이 라이트모드인지 확인 */
-@media (prefers-color-scheme: light) {
-    .themed {
-        display: block;
-        background: white;
-        color: black;
-    }
-    a {
-        color: black;
-        text-decoration: none;
-    }
+.table {
+    background-color: rgba( 255, 255, 255, 0.5 );
 }
-/* @media (prefers-color-scheme: dark) {
-    .themed {
-        display: block;
-        background: rgb(71, 68, 68);
-        color: white;
-    }
-    a {
-        color: white;
-        text-decoration: none;
-    }
-    table {
-        color: white;
-        background: rgb(71, 68, 68);
-    }
-} */
