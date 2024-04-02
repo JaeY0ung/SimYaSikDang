@@ -11,6 +11,8 @@ var imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerS
 var avgLat = 0;
 var avgLng = 0;
 
+var openWindows = [];
+
 places.forEach((place) => {
 	var imageSize = new kakao.maps.Size(24, 35); 
 	var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
@@ -35,9 +37,22 @@ places.forEach((place) => {
 				  </div>`,
 		removable: true		
     });
-
-	kakao.maps.event.addListener(marker, 'click', function() {
-		infowindow.open(map, marker);  
+	infowindow.status = "close";
+	infowindow.close();
+	kakao.maps.event.addListener(marker, 'click', function () {
+		for (var i = 0; i < openWindows.length; i++) {
+			openWindows[i].close();
+			openWindows[i].status = "close";
+		}
+		// if (infowindow.status == "close") {
+			infowindow.open(map, marker);
+			infowindow.status = "open";
+			openWindows.push(infowindow);
+		// } else {
+		// 	openWindows = [];
+		// 	infowindow.close();
+		// 	infowindow.status = "close";
+		// }
   	});
 
 	avgLat += parseFloat(place.dataset.lat);
@@ -53,3 +68,7 @@ avgLng /= places.length;
 // 지도 중심을 부드럽게 이동시킵니다
 // 만약 이동할 거리가 지도 화면보다 크면 부드러운 효과 없이 이동합니다
 map.panTo(new kakao.maps.LatLng(avgLng, avgLat));
+
+function moveCenter(lat, lng) {
+	map.setCenter(new kakao.maps.LatLng(lng, lat));
+}
